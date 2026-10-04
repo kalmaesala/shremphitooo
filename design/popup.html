@@ -1,0 +1,5748 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../icons/icon128.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ffffff;
+      --primary-light: #ffffff;
+      --primary-dark: #7dd3fc;
+      --primary-glow: rgba(255, 255, 255, 0.4);
+      --secondary: #f1f5f9;
+      --accent: #ffffff;
+      --accent-warm: #bae6fd;
+
+      --bg-darker: #020617;
+      --bg-dark: #0f172a;
+      --bg-light: #1e293b;
+      --bg-card: rgba(30, 41, 59, 0.6);
+
+      --glass: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-hover: rgba(125, 211, 252, 0.1);
+
+      --text-primary: #ffffff;
+      --text-secondary: #7dd3fc;
+      --text-muted: #7dd3fc;
+
+      --bg: #0f172a;
+      --surface: rgba(30, 41, 59, 0.8);
+      --surface-hover: rgba(30, 41, 59, 0.9);
+      --elevated: rgba(30, 41, 59, 0.6);
+      --border: rgba(255, 255, 255, 0.2);
+      --border-accent: rgba(255, 255, 255, 0.35);
+      --text: #ffffff;
+      --text-sec: #7dd3fc;
+
+      --green: #10b981;
+      --green-soft: rgba(16, 185, 129, 0.1);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.1);
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --cyan: #06b6d4;
+
+      --gradient-1: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #7dd3fc 100%);
+      --gradient-2: linear-gradient(180deg, rgba(14, 165, 233, 0.1) 0%, transparent 100%);
+      --hdr-bg: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+
+      --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --radius: 14px;
+
+      --shadow-glow: 0 0 40px rgba(255, 255, 255, 0.15);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Header & Tab Variables */
+      --hdr-text: #ffffff;
+      --hdr-sub: #7dd3fc;
+      --hdr-border: rgba(255, 255, 255, 0.2);
+      --tab-bg: rgba(15, 23, 42, 0.6);
+      --tab-text: #7dd3fc;
+      --tab-hover: rgba(125, 211, 252, 0.15);
+      --tab-active: #ffffff;
+      --accent-dark: #7dd3fc;
+      --accent-soft: rgba(125, 211, 252, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input[type="button"],
+    input[type="submit"],
+    .tab-btn {
+      transition: background-color 0.18s ease, color 0.18s ease, opacity 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    button.loading,
+    .tab-btn.loading {
+      opacity: 0.85;
+      transform: scale(0.99);
+      pointer-events: none;
+    }
+
+    button.loading::after,
+    .tab-btn.loading::after {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-left: 8px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: tyagrey-spin 0.8s linear infinite;
+      vertical-align: text-bottom;
+    }
+
+    button:disabled,
+    .tab-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+      transform: scale(0.98);
+    }
+
+    @keyframes tyagrey-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-darker);
+      color: var(--text-primary);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    /* ==========================================
+       ANIMATED BACKGROUND
+       ========================================== */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-grid {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      100% {
+        transform: translate(50px, 50px);
+      }
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--primary);
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary);
+      bottom: -50px;
+      right: -50px;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: var(--accent);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      25% {
+        transform: translate(30px, -30px) scale(1.1);
+      }
+
+      50% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+
+      75% {
+        transform: translate(20px, 30px) scale(1.05);
+      }
+    }
+
+    .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon svg {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ==========================
+       HEADER
+       ========================== */
+    .header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      flex-shrink: 0;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 5%, #ffffff 50%, transparent 95%);
+      opacity: 0.2;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1.5px solid rgba(68, 172, 255, 0.25);
+      box-shadow: 0 2px 8px rgba(68, 172, 255, 0.15);
+      flex-shrink: 0;
+    }
+
+    .logo-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 800;
+      color: #44ACFF;
+      letter-spacing: -0.3px;
+      line-height: 1.15;
+      text-shadow: 0 0 10px rgba(68, 172, 255, 0.35);
+    }
+
+    .logo-sub {
+      font-size: 8.5px;
+      font-weight: 500;
+      color: var(--hdr-sub);
+      letter-spacing: 0.3px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .version-badge {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(68, 172, 255, 0.08);
+      border: 1px solid rgba(68, 172, 255, 0.15);
+      padding: 2px 6px;
+      border-radius: 5px;
+      line-height: 1.3;
+    }
+
+    .header-icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--hdr-sub);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .header-icon-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .header-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.14);
+      color: var(--hdr-text);
+      transform: translateY(-1px);
+    }
+
+    .header-user-area {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .header-pfp {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(68, 172, 255, 0.25);
+      object-fit: cover;
+      background: rgba(68, 172, 255, 0.08);
+    }
+
+    .status-dot-header {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot-header.valid {
+      background: var(--green);
+      box-shadow: 0 0 6px rgba(68, 172, 255, 0.55);
+    }
+
+    .status-dot-header.expired {
+      background: var(--red);
+      box-shadow: 0 0 6px rgba(224, 112, 112, 0.4);
+    }
+
+    /* ==========================
+       TAB NAVIGATION (Top level fallback - overridden by sidebar)
+       ========================== */
+    .tab-nav {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      background: var(--tab-bg);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 9px 4px 7px;
+      font-family: var(--sans);
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--tab-text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .tab-btn .icon {
+      color: var(--tab-text);
+    }
+
+    .tab-btn .icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .tab-btn:hover {
+      color: #7dd3fc;
+      background: var(--tab-hover);
+    }
+
+    .tab-btn.active {
+      color: var(--tab-active);
+      border-bottom-color: var(--tab-active);
+    }
+
+    .tab-btn.active .icon {
+      color: var(--tab-active);
+    }
+
+    .tab-btn.hidden {
+      display: none;
+    }
+
+    /* ==========================
+       SIDEBAR NAVIGATION (Fixed Layout)
+       ========================== */
+    .sidebar {
+      width: 240px;
+      height: 100vh;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--glass-border);
+      background: #5d9fe1;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #7dd3fc 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+      color: #0f172a;
+    }
+
+    .logo-text-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar .tab-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 10px;
+      gap: 4px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar .tab-nav::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar .tab-nav::-webkit-scrollbar-thumb {
+      background: var(--glass-border);
+      border-radius: 2px;
+    }
+
+    /* Fixed .sidebar .tab-btn to prevent flexbox stretching and text clipping */
+    .sidebar .tab-btn {
+      flex: 0 0 auto !important;
+      flex-direction: row !important;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #7dd3fc;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      text-align: left;
+      transition: var(--transition);
+      position: relative;
+      overflow: visible;
+    }
+
+    .sidebar .tab-btn::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: var(--gradient-1);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar .tab-btn:hover {
+      background: var(--glass-hover);
+      color: #7dd3fc;
+    }
+
+    .sidebar .tab-btn.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+
+    .sidebar .tab-btn.active::before {
+      transform: scaleY(1);
+    }
+
+    .sidebar .tab-btn .icon {
+      font-size: 18px;
+      width: 22px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar .tab-btn .icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .status-card {
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* ==========================
+       MAIN CONTENT AREA
+       ========================== */
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==========================
+       TAB CONTENT
+       ========================== */
+    .tab-content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 24px;
+    }
+
+    .tab-content::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .tab-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .tab-content::-webkit-scrollbar-thumb {
+      background: rgba(68, 172, 255, 0.12);
+      border-radius: 3px;
+    }
+
+    .tab-panel {
+      display: none;
+      padding: 14px 16px 22px;
+      animation: fadeUp 0.25s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ==========================
+       CARD
+       ========================== */
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .card:hover {
+      border-color: var(--border);
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+      color: #7dd3fc;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    }
+
+    /* ==========================
+       DASHBOARD
+       ========================== */
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-pfp {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid var(--border-accent);
+      object-fit: cover;
+      background: var(--accent-soft);
+      flex-shrink: 0;
+    }
+
+    .user-pfp-fallback {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid var(--border-accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-id {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .hit-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hit-counter {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hit-counter::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ffffff, transparent);
+      opacity: 0.35;
+    }
+
+    .hit-counter-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hit-counter-value {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* Status row */
+    .status-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .status-item {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .status-item-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .status-item-val {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-sec);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot.green {
+      background: var(--green);
+      box-shadow: 0 0 4px rgba(68, 172, 255, 0.4);
+    }
+
+    .status-dot.red {
+      background: var(--red);
+      box-shadow: 0 0 4px rgba(224, 112, 112, 0.3);
+    }
+
+    /* Quick stats */
+    .quick-stats {
+      display: flex;
+      gap: 10px;
+    }
+
+    .country-settings-card {
+      margin-bottom: 10px;
+    }
+
+    .country-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .country-toggle-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-sec);
+    }
+
+    .country-switch {
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+      appearance: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .country-switch::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .country-switch:checked {
+      background: var(--accent);
+      border-color: var(--accent-dark);
+    }
+
+    .country-switch:checked::before {
+      left: 22px;
+    }
+
+    .country-select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 9px 10px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .country-select:focus {
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 2px rgba(68, 172, 255, 0.12);
+    }
+
+    .country-status {
+      margin-top: 8px;
+      font-size: 9px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    .quick-stat {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-stat::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0.2;
+    }
+
+    .quick-stat-val {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .quick-stat-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+    }
+
+    .logout-section {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, rgba(224, 112, 112, 0.15), rgba(224, 112, 112, 0.08));
+      border: 1px solid rgba(224, 112, 112, 0.3);
+      border-radius: 10px;
+      color: #7dd3fc;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(135deg, rgba(224, 112, 112, 0.25), rgba(224, 112, 112, 0.15));
+      border-color: rgba(224, 112, 112, 0.5);
+      box-shadow: 0 2px 8px rgba(224, 112, 112, 0.2);
+    }
+
+    .logout-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ==========================
+       STATISTICS
+       ========================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .stat-card:nth-child(1)::before {
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
+    }
+
+    .stat-card:nth-child(2)::before {
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0.4;
+    }
+
+    .stat-card:nth-child(3)::before {
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      opacity: 0.4;
+    }
+
+    .stat-card:nth-child(4)::before {
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0.4;
+    }
+
+    .stat-card-value {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+      transition: filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    .stat-card-value.blurred {
+      filter: blur(6px);
+      opacity: 0.6;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .top-bin-action-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(68, 172, 255, 0.12);
+      color: var(--accent);
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .top-bin-action-btn:hover {
+      background: rgba(68, 172, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .top-bin-action-btn.copied {
+      background: rgba(96, 204, 121, 0.18);
+      color: #1d5f2c;
+    }
+
+    .stat-card:nth-child(2) .stat-card-value {
+      color: var(--blue);
+    }
+
+    .stat-card:nth-child(3) .stat-card-value {
+      color: var(--amber);
+    }
+
+    .stat-card:nth-child(4) .stat-card-value {
+      color: var(--cyan);
+    }
+
+    .stat-card-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 4px;
+    }
+
+    .top-hitter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      transition: all 0.2s;
+    }
+
+    .top-hitter:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    .rank-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .rank-1 {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    }
+
+    .rank-2 {
+      background: linear-gradient(135deg, #7dd3fc, #6bb6ff);
+      box-shadow: 0 2px 6px rgba(125, 211, 252, 0.2);
+    }
+
+    .rank-3 {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      box-shadow: 0 2px 6px rgba(125, 211, 252, 0.2);
+    }
+
+    .rank-default {
+      background: linear-gradient(135deg, #7dd3fc, #5aa3fc);
+    }
+
+    .hitter-pfp {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      object-fit: cover;
+      background: var(--accent-soft);
+      flex-shrink: 0;
+    }
+
+    .hitter-pfp-fallback {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .hitter-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hitter-name {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hitter-username {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .hitter-hits {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .top-hitter--me {
+      border-color: var(--border-accent);
+      background: rgba(68, 172, 255, 0.04);
+      box-shadow: 0 0 0 1px rgba(68, 172, 255, 0.08);
+    }
+
+    /* Stats panel layout with footer */
+    .tab-panel--stats {
+      display: none;
+      flex-direction: column;
+      padding-bottom: 0 !important;
+    }
+
+    .tab-panel--stats.active {
+      display: flex;
+    }
+
+    .stats-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 10px;
+    }
+
+    .stats-content::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .stats-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .stats-content::-webkit-scrollbar-thumb {
+      background: rgba(68, 172, 255, 0.12);
+      border-radius: 3px;
+    }
+
+    .stats-footer {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(68, 172, 255, 0.04);
+      border-top: 1px solid var(--border-accent);
+      border-radius: 0;
+      margin: 0 -16px;
+      margin-bottom: 0;
+    }
+
+    .stats-footer-pfp-wrap {
+      flex-shrink: 0;
+    }
+
+    .stats-footer-pfp-wrap img.hitter-pfp {
+      display: block;
+    }
+
+    .stats-footer-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stats-footer-name {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ==========================
+       PROXY
+       ========================== */
+    .proxy-status-card {
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    .proxy-status-icon {
+      margin-bottom: 10px;
+      color: var(--text-muted);
+    }
+
+    .proxy-status-icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .proxy-status-icon.connected {
+      color: var(--green);
+    }
+
+    .proxy-status-icon.connected svg {
+      filter: drop-shadow(0 0 6px rgba(68, 172, 255, 0.2));
+    }
+
+    .proxy-status-icon.notset {
+      opacity: 0.35;
+    }
+
+    .proxy-status-text {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .proxy-status-text.connected {
+      color: var(--green);
+    }
+
+    .proxy-status-text.notset {
+      color: var(--text-muted);
+    }
+
+    .proxy-host {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--border-accent);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-top: 10px;
+      display: none;
+      word-break: break-all;
+    }
+
+    .proxy-host.visible {
+      display: block;
+    }
+
+    .proxy-info-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .proxy-chip {
+      flex: 1;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .proxy-chip-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .proxy-chip-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 3px;
+    }
+
+    .btn-danger {
+      width: 100%;
+      padding: 11px 16px;
+      border: 1px solid rgba(224, 112, 112, 0.12);
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--red);
+      background: var(--red-soft);
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-danger svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--red);
+    }
+
+    .btn-danger:hover {
+      background: rgba(224, 112, 112, 0.1);
+      border-color: rgba(224, 112, 112, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(224, 112, 112, 0.08);
+    }
+
+    .btn-danger:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-danger:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ==========================
+       CUSTOM CHECKOUT BYPASS
+       ========================== */
+    .cc-hidden {
+      display: none !important;
+    }
+
+    /* Role badges */
+    .pro-badge {
+      background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+    .pro-plus-badge {
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+    .locked-row {
+      opacity: 0.45;
+      pointer-events: none;
+      filter: grayscale(0.6);
+    }
+    .locked-section {
+      opacity: 0.45;
+      pointer-events: none;
+      filter: grayscale(0.6);
+    }
+
+    .cc-mode-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--surface);
+      padding: 4px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .cc-mode-btn {
+      flex: 1;
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all .2s;
+      font-family: inherit;
+    }
+
+    .cc-mode-btn:hover {
+      background: var(--surface-hover);
+      color: var(--accent);
+    }
+
+    .cc-mode-btn.active {
+      background: var(--accent);
+      color: var(--bg-darker);
+      box-shadow: 0 2px 4px rgba(125, 211, 252, 0.4);
+    }
+
+    .cc-gateway-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 8px;
+    }
+
+    .cc-gateway-option:last-child {
+      margin-bottom: 0;
+    }
+
+    .cc-gateway-option:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-accent);
+    }
+
+    .cc-gateway-option input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .cc-gateway-option span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .cc-gateway-option:hover span {
+      color: var(--accent);
+    }
+
+    .cc-toggle {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 26px;
+    }
+
+    .cc-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .cc-toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    .cc-toggle-slider::before {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--text);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+      transition: transform .2s ease;
+    }
+
+    .cc-toggle input:checked+.cc-toggle-slider {
+      background: var(--accent);
+    }
+
+    .cc-toggle input:checked+.cc-toggle-slider::before {
+      transform: translateX(18px);
+    }
+
+    /* Disabled toggle state */
+    .cc-toggle input:disabled+.cc-toggle-slider {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .cc-toggle input:disabled+.cc-toggle-slider::before {
+      background: var(--text-muted);
+      opacity: 0.5;
+    }
+    .cc-toggle input:checked:disabled+.cc-toggle-slider {
+      background: var(--surface);
+      opacity: 0.4;
+    }
+    .cc-toggle input:checked:disabled+.cc-toggle-slider::before {
+      transform: translateX(18px);
+      background: var(--text-muted);
+      opacity: 0.5;
+    }
+    .cc-toggle.locked {
+      pointer-events: none !important;
+      opacity: 0.6;
+    }
+
+    .cc-hint {
+      font-size: 10px;
+      color: var(--text-sec);
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: var(--accent-soft);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .cc-hint code {
+      background: rgba(255, 255, 255, .1);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+    }
+
+    .cc-warning {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: var(--red-soft);
+      border: 1px solid rgba(224, 112, 112, .3);
+      border-radius: 8px;
+      font-size: 10px;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .cc-info-text {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    .cc-start-btn {
+      display: block;
+      width: 80%;
+      max-width: 200px;
+      margin: 20px auto 16px;
+      padding: 12px 24px;
+      border: 1px solid rgba(16, 185, 129, .3);
+      background: rgba(16, 185, 129, .08);
+      color: var(--green);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s ease;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      text-align: center;
+    }
+
+    .cc-start-btn:hover {
+      background: rgba(16, 185, 129, .15);
+      border-color: rgba(16, 185, 129, .5);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, .15);
+    }
+
+    .cc-start-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .cc-start-btn.stop {
+      border-color: rgba(220, 38, 38, .3);
+      background: rgba(220, 38, 38, .08);
+      color: var(--red);
+    }
+
+    .cc-start-btn.stop:hover {
+      background: rgba(220, 38, 38, .15);
+      border-color: rgba(220, 38, 38, .5);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, .15);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-accent);
+      border-radius: 10px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .section-header:hover {
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Modern input styling for Custom Checkout */
+    #panel-custom-checkout input[type="text"],
+    #panel-custom-checkout select,
+    #panel-custom-checkout textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    /* Select dropdown styling */
+    #panel-custom-checkout select {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237dd3fc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+
+    #panel-custom-checkout select option {
+      background: var(--bg-light);
+      color: var(--text);
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    #panel-custom-checkout select option:hover,
+    #panel-custom-checkout select option:focus {
+      background: var(--surface-hover);
+    }
+
+    #panel-custom-checkout input[type="text"]:focus,
+    #panel-custom-checkout select:focus,
+    #panel-custom-checkout textarea:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.12);
+    }
+
+    #panel-custom-checkout input[type="text"]::placeholder,
+    #panel-custom-checkout textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    #panel-custom-checkout label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Flex row layout for Custom Checkout */
+    #panel-custom-checkout .flex-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    #panel-custom-checkout .flex-row>div {
+      flex: 1;
+    }
+
+    /* Multi-tab Stripe Detection Styles */
+    .cc-tab-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .cc-tab-item:hover {
+      background: var(--surface-hover);
+      border-color: var(--green);
+    }
+
+    .cc-tab-item.selected {
+      background: var(--surface-hover);
+      border-color: var(--green);
+    }
+
+    .cc-tab-left-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cc-tab-right-section {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .cc-tab-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .cc-tab-bin {
+      width: 60px;
+      padding: 4px 6px;
+      font-size: 9px;
+      font-family: var(--mono);
+      border: 1px solid var(--border-accent);
+      border-radius: 50px;
+      background: var(--bg-light);
+      color: var(--text);
+      outline: none;
+      flex-shrink: 0;
+      cursor: text;
+      transition: border-color .2s;
+      -webkit-text-security: disc;
+    }
+
+    .cc-tab-bin:focus {
+      border-color: var(--accent);
+      background: var(--bg-light);
+      box-shadow: 0 0 0 2px rgba(125, 211, 252, .1);
+    }
+
+    .cc-tab-bin::placeholder {
+      color: var(--text-muted);
+      font-size: 8px;
+    }
+
+    /* Always blur/mask BIN inputs */
+    input.cc-bin-masked,
+    .cc-bin-masked {
+      -webkit-text-security: disc;
+    }
+
+    /* Fallback for browsers that don't support -webkit-text-security */
+    input.cc-bin-masked::-webkit-input-placeholder,
+    .cc-bin-masked::-webkit-input-placeholder {
+      color: transparent;
+    }
+
+    input.cc-bin-masked::placeholder,
+    .cc-bin-masked::placeholder {
+      color: transparent;
+    }
+
+    .cc-tab-favicon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .cc-tab-info {
+      flex: 1;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .cc-tab-merchant {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cc-tab-url {
+      font-size: 9px;
+      color: var(--text-sec);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: var(--mono);
+    }
+
+    .cc-tabs-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 16px;
+    }
+
+    .cc-tabs-loading {
+      text-align: center;
+      color: var(--text-sec);
+      font-size: 11px;
+      padding: 16px;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Gateway Selector Row Styles (like Multiple Checkout) */
+    .cc-gateway-selector-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cc-gateway-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .cc-gateway-row:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-accent);
+    }
+
+    .cc-gateway-row span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sec);
+      flex: 1;
+    }
+
+    .cc-gateway-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .cc-gateway-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .cc-select-all-btn,
+    .cc-unselect-all-btn {
+      flex: 1;
+      padding: 5px 10px;
+      font-size: 9px;
+      font-weight: 600;
+      border: 1px solid rgba(125, 211, 252, .3);
+      background: rgba(125, 211, 252, .08);
+      color: #7dd3fc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit;
+    }
+
+    .cc-select-all-btn:hover,
+    .cc-unselect-all-btn:hover {
+      background: rgba(125, 211, 252, .15);
+      border-color: rgba(125, 211, 252, .5);
+    }
+
+    .cc-unselect-all-btn {
+      border-color: rgba(107, 114, 128, .3);
+      background: rgba(107, 114, 128, .08);
+      color: var(--text-muted);
+    }
+
+    .cc-unselect-all-btn:hover {
+      background: rgba(107, 114, 128, .15);
+      border-color: rgba(107, 114, 128, .5);
+    }
+
+    /* Log Section Styles */
+    .cc-log-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      line-height: 1.4;
+      animation: fadeIn .3s ease;
+    }
+
+    .cc-log-entry:hover {
+      background: rgba(255, 255, 255, .05);
+    }
+
+    .cc-log-time {
+      color: var(--text-muted);
+      flex-shrink: 0;
+      font-size: 9px;
+    }
+
+    .cc-log-badge {
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .cc-log-badge.info {
+      background: rgba(68, 172, 255, .15);
+      color: var(--accent);
+    }
+
+    .cc-log-badge.success {
+      background: rgba(22, 163, 74, .15);
+      color: #16a34a;
+    }
+
+    .cc-log-badge.error {
+      background: rgba(220, 38, 38, .15);
+      color: #dc2626;
+    }
+
+    .cc-log-badge.warn {
+      background: rgba(245, 158, 11, .15);
+      color: #d97706;
+    }
+
+    .cc-log-badge.card {
+      background: rgba(139, 92, 246, .15);
+      color: #7c3aed;
+    }
+
+    .cc-log-message {
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .cc-log-card {
+      font-family: var(--mono);
+      background: rgba(0, 0, 0, .05);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 9px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      20% {
+        transform: translateX(-4px)
+      }
+
+      40% {
+        transform: translateX(4px)
+      }
+
+      60% {
+        transform: translateX(-4px)
+      }
+
+      80% {
+        transform: translateX(4px)
+      }
+    }
+
+    /* Running state: minimize settings, lock inputs */
+    #panel-custom-checkout.cc-running .cc-settings-area {
+      display: none !important;
+    }
+
+    #panel-custom-checkout.cc-running .cc-running-overlay {
+      display: flex !important;
+    }
+
+    #panel-custom-checkout.cc-running input,
+    #panel-custom-checkout.cc-running select,
+    #panel-custom-checkout.cc-running textarea,
+    #panel-custom-checkout.cc-running button:not(.cc-start-btn):not(#cc-clear-log-btn):not(#cc-refresh-log-btn):not(.cc-running-stop) {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    #panel-custom-checkout.cc-running .section-header {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .cc-running-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, .08), rgba(16, 185, 129, .04));
+      border: 1px solid rgba(16, 185, 129, .25);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .cc-running-overlay .cc-running-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .cc-running-overlay .cc-running-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cc-running-overlay .cc-running-stop {
+      padding: 8px 20px;
+      font-size: 12px;
+      border: 1px solid rgba(220, 38, 38, .4);
+      background: rgba(220, 38, 38, .1);
+      color: #dc2626;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all .2s ease;
+    }
+
+    .cc-running-overlay .cc-running-stop:hover {
+      background: rgba(220, 38, 38, .2);
+      transform: translateY(-1px);
+    }
+
+    /* Smooth loading overlay for stop/reload */
+    .cc-loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.95));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cc-loading-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cc-loading-content {
+      text-align: center;
+      padding: 48px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+      border-radius: 20px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      transform: scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cc-loading-overlay.active .cc-loading-content {
+      transform: scale(1);
+    }
+
+    .cc-loading-spinner {
+      width: 56px;
+      height: 56px;
+      border: 4px solid rgba(22, 163, 74, 0.15);
+      border-top: 4px solid #16a34a;
+      border-radius: 50%;
+      animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .cc-loading-spinner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .cc-loading-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #16a34a;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .cc-loading-subtext {
+      font-size: 13px;
+      color: #6b7280;
+      opacity: 0.8;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.6;
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.3;
+      }
+    }
+
+    /* ==========================
+       MY HITS
+       ========================== */
+    .myhits-header {
+      padding: 0 0 16px 0;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .myhits-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .myhits-header-left {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .myhits-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0 0 4px 0;
+      letter-spacing: -0.3px;
+    }
+
+    .myhits-subtitle {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .myhits-total-pill {
+      flex-shrink: 0;
+      max-width: 200px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(68, 172, 255, 0.22);
+      background: linear-gradient(135deg, rgba(68, 172, 255, 0.18), rgba(68, 172, 255, 0.08));
+      box-shadow: 0 8px 18px rgba(68, 172, 255, 0.10);
+      color: rgba(44, 53, 68, 0.9);
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      line-height: 1.35;
+      text-align: center;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .myhits-total-title {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: -0.2px;
+      color: #44ACFF;
+      margin: 0;
+      text-transform: none;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .myhits-total-amt {
+      display: block;
+      margin-top: 2px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      color: #44ACFF;
+      text-transform: none;
+      text-shadow: 0 0 18px rgba(68, 172, 255, 0.22);
+    }
+
+    .myhits-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      position: relative;
+    }
+
+    .myhits-list.refreshing::after {
+      content: 'Refreshing hits...';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 4px 10px;
+      border-radius: 999px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+      z-index: 1;
+    }
+
+    /* Responsive design for My Hits grid */
+    @media (max-width: 1200px) {
+      .myhits-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .myhits-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .myhits-total-pill.refreshing {
+      opacity: 0.88;
+      transition: opacity 0.2s ease;
+    }
+
+    .myhits-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .myhits-empty svg {
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
+      opacity: 0.3;
+      margin-bottom: 12px;
+    }
+
+    .myhits-empty p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .myhits-hit-card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .myhits-hit-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .myhits-hit-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 12px var(--accent-glow);
+      background: var(--surface-hover);
+    }
+
+    .myhits-hit-card:hover::before {
+      opacity: 1;
+    }
+
+    .myhits-hit-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .myhits-hit-status {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .myhits-hit-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      background: var(--green);
+      border-radius: 6px;
+      padding: 4px 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(68, 172, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .myhits-hit-badge.declined {
+      background: var(--red);
+      box-shadow: 0 2px 8px rgba(224, 112, 112, 0.2);
+    }
+
+    .myhits-copy-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border-accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    .myhits-copy-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .myhits-copy-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(68, 172, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .myhits-copy-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    .myhits-copy-btn.copied {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .myhits-hit-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .myhits-hit-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .myhits-hit-label {
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      min-width: 50px;
+      text-transform: uppercase;
+      font-size: 9px;
+      letter-spacing: 0.5px;
+    }
+
+    .myhits-hit-value {
+      font-family: var(--mono);
+      font-weight: 500;
+      color: var(--text);
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .myhits-hit-value.site-link {
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .myhits-hit-value.site-link:hover {
+      opacity: 0.8;
+    }
+
+    .myhits-hit-card.charged .myhits-hit-value.amount {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ==========================
+       MY HITS SEARCH
+       ========================== */
+    .myhits-search-row {
+      margin-bottom: 14px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .myhits-search-row .search-input-wrap {
+      position: relative;
+      flex: 1;
+    }
+    .myhits-search-row input {
+      width: 100%;
+      padding: 10px 36px 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .myhits-search-row input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.12);
+    }
+    .myhits-search-row input::placeholder {
+      color: var(--text-muted);
+    }
+    .myhits-search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.15s ease;
+    }
+    .myhits-search-clear:hover {
+      color: var(--text);
+    }
+    .myhits-search-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: var(--mono);
+    }
+
+    /* ==========================
+       HELP OVERLAY
+       ========================== */
+    .help-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .help-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .help-modal {
+      width: 88%;
+      max-width: 340px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(180, 200, 190, 0.4);
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .help-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #161b26, #1a202e);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .help-modal-title {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 700;
+      color: #e8ecf1;
+      letter-spacing: -0.2px;
+    }
+
+    .help-close-btn {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .help-close-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .help-close-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #e8ecf1;
+    }
+
+    .help-modal-body {
+      padding: 18px 16px 20px;
+    }
+
+    .help-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .help-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .help-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(68, 172, 255, 0.25);
+    }
+
+    .help-step-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-sec);
+      line-height: 1.5;
+      padding-top: 2px;
+    }
+
+    /* ==========================
+       BIN LIBRARY OVERLAY
+       ========================== */
+    .binlib-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .binlib-overlay.active {
+      display: flex;
+    }
+
+    .binlib-modal {
+      width: 100%;
+      max-width: 400px;
+      max-height: 80vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      animation: slideUp 0.25s ease;
+    }
+
+    .binlib-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--hdr-bg);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px 16px 0 0;
+      flex-shrink: 0;
+    }
+
+    .binlib-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .binlib-modal-title {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--hdr-text);
+      letter-spacing: -0.2px;
+    }
+
+    .binlib-count-badge {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(68, 172, 255, 0.1);
+      border: 1px solid rgba(68, 172, 255, 0.18);
+      border-radius: 10px;
+      padding: 1px 7px;
+      letter-spacing: 0.2px;
+    }
+
+    .binlib-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .my-bin-add-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .my-bin-input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 23, 42, 0.55);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .my-bin-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .my-bin-add-btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(68, 172, 255, 0.18);
+      color: var(--accent);
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s;
+      flex-shrink: 0;
+    }
+
+    .my-bin-add-btn:hover {
+      background: rgba(68, 172, 255, 0.24);
+    }
+
+    .my-bin-clear-btn {
+      background: rgba(255, 80, 80, 0.16);
+      color: rgba(255, 80, 80, 1);
+      border: 1px solid rgba(255, 80, 80, 0.35);
+    }
+
+    .my-bin-clear-btn:hover {
+      background: rgba(255, 80, 80, 0.24);
+    }
+
+    .my-bin-status {
+      font-family: var(--sans);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      opacity: 0.85;
+    }
+
+    .my-bin-status .bin-limit-warning {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ff4b4b;
+      letter-spacing: -0.15px;
+    }
+
+    .my-bin-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    /* Responsive design for My Cloud BINS grid */
+    @media (max-width: 1200px) {
+      .my-bin-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .my-bin-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .my-bin-card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      color: var(--text);
+      overflow: hidden;
+      min-width: 0;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .my-bin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .my-bin-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 12px var(--accent-glow);
+      background: var(--surface-hover);
+    }
+
+    .my-bin-card:hover::before {
+      opacity: 1;
+    }
+
+    .my-bin-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      min-width: 0;
+    }
+
+    .my-bin-card-header > div:first-child {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .my-bin-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+      margin-top: 8px;
+    }
+
+    .my-bin-card-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .my-bin-card-text {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .my-bin-card-meta {
+      font-family: var(--sans);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .my-bin-card-meta-value {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .my-bin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .my-bin-use-btn,
+    .my-bin-edit-btn,
+    .my-bin-delete-btn {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: var(--sans);
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .my-bin-use-btn:hover,
+    .my-bin-edit-btn:hover,
+    .my-bin-delete-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(68, 172, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .my-bin-delete-btn {
+      border-color: rgba(224, 112, 112, 0.25);
+      color: var(--red);
+    }
+
+    .my-bin-delete-btn:hover {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+      box-shadow: 0 2px 8px rgba(224, 112, 112, 0.3);
+    }
+
+    .my-bin-use-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .binlib-filter-btn {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      transition: all 0.18s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .binlib-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .binlib-filter-btn.active {
+      background: rgba(68, 172, 255, 0.12);
+      border-color: rgba(68, 172, 255, 0.25);
+      color: var(--accent);
+    }
+
+    .binlib-close-btn {
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-left: 2px;
+    }
+
+    .binlib-close-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .binlib-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e8ecf1;
+    }
+
+    .binlib-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 10px 14px 16px;
+    }
+
+    .binlib-modal-body::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .binlib-modal-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .binlib-modal-body::-webkit-scrollbar-thumb {
+      background: rgba(68, 172, 255, 0.15);
+      border-radius: 3px;
+    }
+
+    .binlib-empty {
+      text-align: center;
+      padding: 50px 20px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .binlib-empty-icon {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .binlib-empty-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .binlib-empty-sub {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+    /* Card */
+    .binlib-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 7px;
+      transition: all 0.18s;
+    }
+
+    .binlib-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 12px var(--accent-glow);
+    }
+
+    /* Labeled data rows */
+    .binlib-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .binlib-row:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .binlib-lbl {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      width: 32px;
+      flex-shrink: 0;
+    }
+
+    .binlib-val {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-sec);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .binlib-val--bin {
+      font-family: var(--mono);
+      font-weight: 400;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+    }
+
+    .binlib-val--credit {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    /* Separator */
+    .binlib-sep {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 7px 0 6px;
+    }
+
+    /* Footer row: date + counts */
+    .binlib-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .binlib-foot-date {
+      font-family: var(--sans);
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .binlib-foot-counts {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .binlib-fc-like {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--accent);
+    }
+
+    .binlib-fc-dislike {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--red);
+      opacity: 0.7;
+    }
+
+    .binlib-fc-sep {
+      margin: 0 3px;
+      color: var(--border);
+      font-weight: 400;
+    }
+
+    .binlib-fc-like svg,
+    .binlib-fc-dislike svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .ipcheck-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 68px 12px 12px;
+      background: rgba(6, 10, 16, 0.58);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .ipcheck-overlay.active {
+      display: flex;
+    }
+
+    .ipcheck-modal {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(180deg, #070b11 0%, #0c1016 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      color: #f0f6ff;
+    }
+
+    .ipcheck-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .ipcheck-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ipcheck-globe {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7ef4bf;
+      background: rgba(126, 244, 191, 0.08);
+      border: 1px solid rgba(126, 244, 191, 0.16);
+    }
+
+    .ipcheck-globe svg,
+    .ipcheck-icon-btn svg,
+    .ipcheck-mini-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .ipcheck-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #f5fbff;
+      letter-spacing: -0.2px;
+    }
+
+    .ipcheck-subtitle {
+      font-size: 9px;
+      margin-top: 2px;
+      color: rgba(226, 236, 247, 0.54);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .ipcheck-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ipcheck-icon-btn,
+    .ipcheck-mini-btn {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(236, 242, 248, 0.8);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .ipcheck-icon-btn {
+      width: 31px;
+      height: 31px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .ipcheck-icon-btn:hover,
+    .ipcheck-mini-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .ipcheck-body {
+      padding: 18px;
+    }
+
+    .ipcheck-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .ipcheck-ip-wrap {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .ipcheck-ip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .ipcheck-ip-text {
+      font-family: var(--mono);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: #f8fbff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: filter 0.18s ease;
+    }
+
+    .ipcheck-ip-text.blurred {
+      filter: blur(7px);
+    }
+
+    .ipcheck-mini-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .ipcheck-source {
+      margin-top: 6px;
+      font-size: 10px;
+      color: rgba(226, 236, 247, 0.5);
+    }
+
+    .ipcheck-badge {
+      flex-shrink: 0;
+      min-width: 92px;
+      padding: 10px 14px;
+      text-align: center;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .ipcheck-badge.low {
+      color: #f4fff7;
+      background: linear-gradient(135deg, #48b95d, #64d878);
+      border-color: rgba(129, 239, 149, 0.35);
+    }
+
+    .ipcheck-badge.medium {
+      color: #fffaf0;
+      background: linear-gradient(135deg, #dca53b, #f0c55a);
+      border-color: rgba(255, 216, 122, 0.35);
+    }
+
+    .ipcheck-badge.high,
+    .ipcheck-badge.very-high {
+      color: #fff6f6;
+      background: linear-gradient(135deg, #db5555, #ef7070);
+      border-color: rgba(255, 132, 132, 0.35);
+    }
+
+    .ipcheck-score-panel {
+      padding: 14px 12px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .ipcheck-scorebar {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .ipcheck-scorebar span {
+      display: block;
+      height: 22px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.09);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ipcheck-scorebar span.active.low {
+      background: linear-gradient(180deg, #15c67d, #0fae6a);
+      box-shadow: 0 0 16px rgba(21, 198, 125, 0.26);
+    }
+
+    .ipcheck-scorebar span.active.medium {
+      background: linear-gradient(180deg, #efbb4f, #dc9b22);
+      box-shadow: 0 0 16px rgba(239, 187, 79, 0.24);
+    }
+
+    .ipcheck-scorebar span.active.high,
+    .ipcheck-scorebar span.active.very-high {
+      background: linear-gradient(180deg, #f45e5e, #d93a3a);
+      box-shadow: 0 0 16px rgba(244, 94, 94, 0.24);
+    }
+
+    .ipcheck-score-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .ipcheck-score-meta .left {
+      color: #34d06c;
+    }
+
+    .ipcheck-score-meta .center {
+      color: #f5fbff;
+      text-align: center;
+      flex: 1;
+      font-size: 12px;
+    }
+
+    .ipcheck-score-meta .right {
+      color: #ff4c4c;
+    }
+
+    .ipcheck-details {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .ipcheck-row {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .ipcheck-label {
+      font-size: 11px;
+      color: rgba(231, 239, 248, 0.6);
+    }
+
+    .ipcheck-value {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-end;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 600;
+      color: #f6fbff;
+      word-break: break-word;
+    }
+
+    .ipcheck-flag {
+      flex-shrink: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .ipcheck-foot {
+      margin-top: 18px;
+      font-size: 10px;
+      color: rgba(225, 235, 245, 0.46);
+      line-height: 1.5;
+    }
+
+
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 30px;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    /* Owner Control Panel */
+    .owner-panel-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .owner-panel-icon {
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .owner-panel-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .owner-panel-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .owner-panel-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .owner-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .owner-stat-card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .owner-stat-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 12px var(--accent-glow);
+      background: var(--surface-hover);
+    }
+
+    .owner-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .owner-stat-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.6px;
+    }
+
+    .owner-section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 20px 0 12px;
+    }
+
+    .owner-section-title svg {
+      width: 14px;
+      height: 14px;
+      color: var(--accent);
+    }
+
+    .owner-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .owner-form-card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .owner-form-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 12px var(--accent-glow);
+      background: var(--surface-hover);
+    }
+
+    .owner-form-card h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .owner-field {
+      margin-bottom: 10px;
+    }
+
+    .owner-field label {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .owner-field input,
+    .owner-field select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .owner-field input:focus,
+    .owner-field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(68, 172, 255, 0.08);
+    }
+
+    .owner-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .owner-btn:hover {
+      opacity: 0.9;
+    }
+
+    .owner-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .owner-users-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .owner-user-card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .owner-user-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 2px 12px var(--accent-glow);
+      background: var(--surface-hover);
+    }
+
+    .owner-user-card h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .owner-user-list {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .owner-user-list::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .owner-user-list::-webkit-scrollbar-thumb {
+      background: rgba(68, 172, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    .owner-user-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      background: var(--bg);
+      font-size: 12px;
+    }
+
+    .owner-user-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .owner-user-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .owner-user-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .owner-user-actions button {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .owner-btn-extend {
+      background: rgba(68, 172, 255, 0.12);
+      color: var(--accent);
+    }
+
+    .owner-btn-cancel {
+      background: rgba(224, 112, 112, 0.12);
+      color: var(--red);
+    }
+
+    .owner-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 20px;
+    }
+
+    .owner-loading {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .owner-stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .owner-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .owner-users-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Desktop */
+    @media (min-width: 500px) {
+      body {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .tab-btn {
+        font-size: 9px;
+        padding: 10px 6px 8px;
+      }
+
+      .tab-btn .icon svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      .tab-panel {
+        padding: 16px 20px 24px;
+      }
+
+      .header {
+        padding: 12px 18px;
+      }
+
+      .hit-counter-value {
+        font-size: 28px;
+      }
+
+      .stat-card-value {
+        font-size: 24px;
+      }
+
+      .user-name {
+        font-size: 16px;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    /* IP Fraud Reload Button Animation */
+    #ipFraudReloadBtn.loading svg {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="mobile.css">
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div style="display: flex; width: 100vw; height: 100vh; position: relative; z-index: 1;">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-section">
+          <img src="../icons/TYAgrey Hitter Mail Logo.png" alt="TYAgrey Mail"
+            style="height: 32px; width: auto; margin-right: 12px;">
+          <div class="logo-text-group">
+            <div class="logo-text">TYAgrey Hitter</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="dashboard">
+          <span class="icon"><svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg></span>
+          Dashboard
+        </button>
+        <button class="tab-btn" data-tab="custom-checkout" id="customCheckoutTabBtn">
+          <span class="icon"><svg viewBox="0 0 24 24">
+              <path d="M9 14l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg></span>
+          Multiple Checkout Bypass <span class="pro-badge">PRO</span>
+        </button>
+        <button class="tab-btn" data-tab="myhits">
+          <span class="icon"><svg viewBox="0 0 24 24">
+              <path
+                d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" />
+            </svg></span>
+          My Hits
+        </button>
+        <button class="tab-btn" data-tab="mybins">
+          <span class="icon"><svg viewBox="0 0 24 24">
+              <path d="M17 21H7c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2z" />
+              <path d="M11 3c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2h2c0-2.21-1.79-4-4-4z" />
+              <circle cx="12" cy="13" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+            </svg></span>
+          My Cloud BINS
+        </button>
+        <button class="tab-btn" data-tab="proxymanager">
+          <span class="icon">🌐</span>
+          Proxy Manager
+        </button>
+        <button class="tab-btn hidden" data-tab="iplist" id="ipListTabBtn">
+          <span class="icon"><svg viewBox="0 0 24 24">
+              <path d="M4 6h16M4 12h12M4 18h8" />
+            </svg></span>
+          IP List
+        </button>
+        <button class="tab-btn" data-tab="ipfraud" id="ipFraudTabBtn">
+          <span class="icon">🥷🏻</span>
+          IP Fraud Check
+        </button>
+        <button class="tab-btn" data-tab="binlookup" id="binLookupTabBtn">
+          <span class="icon">💳</span>
+          Private BIN Lookup <span class="pro-badge">PRO</span>
+        </button>
+        <button class="tab-btn" data-tab="statistics">
+          <span class="icon"><svg viewBox="0 0 24 24">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg></span>
+          Statistics
+        </button>
+        <button class="tab-btn hidden" data-tab="ownerpanel" id="ownerPanelTabBtn">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg></span>
+          Owner System
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="status-card">
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>System Online</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <span class="version-badge" id="versionBadge">v--</span>
+        </div>
+        <div class="header-right">
+          <button class="header-icon-btn" id="headerLogoutBtn" title="Logout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+
+        <!-- Dashboard -->
+        <div class="tab-panel active" id="panel-dashboard">
+          <div class="card">
+            <div class="section-label">Operator</div>
+            <div class="user-card">
+              <img class="user-pfp" id="dashPfp" src="../icons/icon128.png" alt="TYAgrey" style="display:block;">
+              <div class="user-info">
+                <div class="user-name" id="dashName" style="text-align:center; font-weight:bold;">🎉 Welcome to TYAgrey
+                  Hitter 🔥</div>
+                <br>
+                <div class="user-username" id="dashUsername" style="font-weight:bold; text-align:center;">User Name:
+                </div>
+                <div class="user-id" id="dashId" style="font-weight:bold; text-align:center;">ID: </div>
+                <div class="user-role" id="dashRole" style="font-weight:bold; text-align:center; color:#0ea5e9;">Role: —</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hit-row">
+            <div class="hit-counter">
+              <div class="hit-counter-label">Daily Hits</div>
+              <div class="hit-counter-value" id="dashDaily">0</div>
+            </div>
+            <div class="hit-counter">
+              <div class="hit-counter-label">My Hits</div>
+              <div class="hit-counter-value" id="dashHits">0</div>
+            </div>
+            <div class="hit-counter">
+              <div class="hit-counter-label">Global</div>
+              <div class="hit-counter-value" id="dashGlobal">0</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 16px;">
+            <style>
+              .profile-card .profile-input {
+                width: 100%;
+                padding: 10px 12px;
+                border-radius: 10px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 13px;
+                outline: none;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+              }
+              .profile-card .profile-input:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.12);
+              }
+              .profile-card .profile-input::placeholder {
+                color: var(--text-muted);
+              }
+              .profile-card .profile-field {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                flex: 1;
+              }
+              .profile-card .profile-field label {
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--text-muted);
+              }
+            </style>
+            <div class="profile-card" style="display:flex; flex-direction:column; gap: 14px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap;">
+                <div style="text-align:left;">
+                  <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);">
+                    Checkout Profile</div>
+                  <h2 style="margin: 4px 0 0; font-size: 15px; font-weight: 500; color: var(--text);">Name &amp; Email</h2>
+                </div>
+              </div>
+              <div style="display:flex; gap: 10px; flex-wrap:wrap;">
+                <div class="profile-field">
+                  <label for="profileName">Full Name</label>
+                  <input type="text" id="profileName" class="profile-input" placeholder="TYAgrey" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="profile-field">
+                  <label for="profileEmail">Email</label>
+                  <input type="text" id="profileEmail" class="profile-input" placeholder="tyagrey@voewo.com" autocomplete="off" spellcheck="false">
+                </div>
+              </div>
+              <div id="profileStatus" style="font-size: 12px; color: var(--text-muted);">Leave empty to use defaults</div>
+            </div>
+          </div>
+
+          <div class="card country-settings-card" style="padding: 16px;">
+            <style>
+              .country-override-card .country-toggle {
+                position: relative;
+                width: 48px;
+                height: 28px;
+                display: inline-block;
+              }
+
+              .country-override-card .country-toggle input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+              }
+
+              .country-override-card .country-toggle .slider {
+                position: absolute;
+                inset: 0;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                cursor: pointer;
+                transition: background 0.2s ease;
+              }
+
+              .country-override-card .country-toggle .slider::before {
+                content: '';
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: var(--text);
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                transition: transform 0.2s ease;
+              }
+
+              .country-override-card .country-toggle input:checked+.slider {
+                background: var(--accent);
+                border-color: var(--accent-dark);
+              }
+
+              .country-override-card .country-toggle input:checked+.slider::before {
+                transform: translateX(20px);
+              }
+            </style>
+            <div class="country-override-card" style="display:flex; flex-direction:column; gap: 16px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap;">
+                <div style="text-align:left;">
+                  <div
+                    style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);">
+                    Country / Region</div>
+                  <h2 style="margin: 4px 0 0; font-size: 15px; font-weight: 500; color: var(--text);">Enable Country
+                    Override</h2>
+                </div>
+                <label class="country-toggle">
+                  <input type="checkbox" id="countryRegionEnabled">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div
+                style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px;">
+                <select id="countryRegionSelect" class="country-select">
+                  <option value="">United States (US)</option>
+                </select>
+              </div>
+
+              <div id="countryRegionStatus" style="font-size: 12px; color: var(--text-muted);">Status: Disabled (no country
+                override)</div>
+
+            </div>
+          </div>
+
+          <div class="card" style="padding: 16px;">
+            <style>
+              .hit-delay-card .hit-delay-toggle {
+                position: relative;
+                width: 48px;
+                height: 28px;
+                display: inline-block;
+              }
+              .hit-delay-card .hit-delay-toggle input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+              }
+              .hit-delay-card .hit-delay-toggle .slider {
+                position: absolute;
+                inset: 0;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                cursor: pointer;
+                transition: background 0.2s ease;
+              }
+              .hit-delay-card .hit-delay-toggle .slider::before {
+                content: '';
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: var(--text);
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                transition: transform 0.2s ease;
+              }
+              .hit-delay-card .hit-delay-toggle input:checked+.slider {
+                background: var(--accent);
+                border-color: var(--accent-dark);
+              }
+              .hit-delay-card .hit-delay-toggle input:checked+.slider::before {
+                transform: translateX(20px);
+              }
+            </style>
+            <div class="hit-delay-card" style="display:flex; flex-direction:column; gap: 16px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap;">
+                <div style="text-align:left;">
+                  <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);">
+                    Hit Speed Control</div>
+                  <h2 style="margin: 4px 0 0; font-size: 15px; font-weight: 500; color: var(--text);">Enable Custom Delay <span class="pro-badge">PRO</span></h2>
+                </div>
+                <label class="hit-delay-toggle">
+                  <input type="checkbox" id="hitDelayEnabled">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div id="hitDelayInputWrap" style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; opacity: 0.5; pointer-events: none;">
+                <input type="number" id="hitDelayMsInput" placeholder="1000" min="100" max="10000" step="50" value="1000"
+                  style="flex:1; border: none; background: transparent; outline: none; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--text); font-weight: 600;">
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">ms</span>
+              </div>
+
+              <div id="hitDelayStatus" style="font-size: 12px; color: var(--text-muted);">Status: Disabled (default 1000ms)</div>
+            </div>
+          </div>
+
+          <div class="status-row">
+            <div class="status-item">
+              <div class="status-item-label">License</div>
+              <div class="status-item-val">
+                <span class="status-dot" id="chipLicenseDot"></span>
+                <span id="chipLicense">--</span>
+              </div>
+            </div>
+            <div class="status-item">
+              <div class="status-item-label">Proxy</div>
+              <div class="status-item-val">
+                <span class="status-dot" id="chipProxyDot"></span>
+                <span id="chipProxy">--</span>
+              </div>
+            </div>
+            <div class="status-item">
+              <div class="status-item-label">Version</div>
+              <div class="status-item-val">
+                <span class="status-dot green"></span>
+                <span id="chipVersion">v--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-stats">
+            <div class="quick-stat">
+              <div class="quick-stat-val" id="dashAttempts">0</div>
+              <div class="quick-stat-label">Attempts</div>
+            </div>
+            <div class="quick-stat">
+              <div class="quick-stat-val" id="dashRate">0%</div>
+              <div class="quick-stat-label">Success Rate</div>
+            </div>
+          </div>
+
+          <div class="logout-section">
+            <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+          </div>
+        </div>
+
+        <!-- Multiple Checkout Bypass -->
+        <div class="tab-panel" id="panel-custom-checkout">
+          <div class="card">
+            <div class="section-label">Multiple Checkout Bypasser</div>
+
+            <div class="cc-settings-area">
+              <!-- 1. BIN / CC List -->
+              <div class="section-header">
+                <div class="section-title">1. BIN / CC List</div>
+                <div class="cc-mode-toggle">
+                  <button class="cc-mode-btn active" id="cc-bin-mode-btn" data-mode="bin">BIN</button>
+                  <button class="cc-mode-btn" id="cc-cc-list-mode-btn" data-mode="ccList">CC List</button>
+                </div>
+              </div>
+              <div style="margin-bottom:16px;">
+                <!-- BIN Mode -->
+                <div id="cc-bin-mode-content">
+                  <div class="flex-row">
+                    <div style="flex:7;">
+                      <label>BIN</label>
+                      <input type="text" id="cc-bin-input" class="cc-bin-masked" placeholder="44304400"
+                        autocomplete="off" spellcheck="false" />
+                    </div>
+                    <div style="flex:3;">
+                      <label>CVV</label>
+                      <input type="text" id="cc-cvv-input" placeholder="RND" value="RND" maxlength="4" autocomplete="off"
+                        spellcheck="false" />
+                    </div>
+                  </div>
+                  <div class="flex-row" style="margin-top:10px;">
+                    <div style="flex:1;">
+                      <label>Expiry Month</label>
+                      <select id="cc-expiry-month-select">
+                        <option value="RND" selected>RND</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                      </select>
+                    </div>
+                    <div style="flex:1;">
+                      <label>Expiry Year</label>
+                      <select id="cc-expiry-year-select">
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- CC List Mode -->
+                <div id="cc-cc-list-mode-content" class="cc-hidden">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <label style="font-size:11px; font-weight:600; color:var(--text-muted);">CC List</label>
+                    <span style="font-size:10px; color:var(--text-muted);" id="cc-list-counter">📋 0 cards</span>
+                  </div>
+                  <textarea id="cc-list-input"
+                    placeholder="Paste cards (any format: pipe, colon, space, comma)&#10;Luhn validation + expired filter applied automatically"
+                    style="min-height:80px; resize:vertical; font-size:11px;"></textarea>
+                  <p class="cc-hint">💡 Supports: <code>4242...|12|25|123</code> or <code>4242... 12 25 123</code></p>
+                </div>
+              </div>
+
+              <button id="cc-start-btn" class="cc-start-btn">▶ Start</button>
+
+              <!-- Multi-Tab Checkout Detection -->
+              <div class="section-header"
+                style="margin-top:16px; background:linear-gradient(135deg, rgba(16,185,129,.08), rgba(16,185,129,.04)); border-color:rgba(16,185,129,.25);">
+                <div class="section-title" style="color:var(--green);">🌐 Multiple Checkout</div>
+                <div style="font-size:9px; color:var(--green); opacity:0.7;">Auto-sync enabled</div>
+              </div>
+              <p style="font-size:9px; color:var(--text-muted); margin:4px 0 8px; font-style:italic;">💡 Single tab: uses BIN/CC
+                List above | Multiple tabs: enter BIN per-tab below</p>
+              <div id="cc-tabs-list"
+                style="margin-bottom:16px; max-height:150px; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px;">
+                <div class="cc-tabs-loading">🔍 Scanning for checkout pages... Open a checkout link to see it here.
+                </div>
+              </div>
+              <div id="cc-tabs-actions" style="display:none; gap:8px; margin-bottom:16px;">
+                <button id="cc-select-all-btn"
+                  style="flex:1; padding:6px 10px; font-size:10px; border:1px solid rgba(68,172,255,.3); background:rgba(68,172,255,.08); color:var(--accent); border-radius:6px; cursor:pointer; font-weight:600;">Select
+                  All</button>
+                <button id="cc-refresh-tabs-btn"
+                  style="padding:6px 10px; font-size:10px; border:1px solid rgba(16,185,129,.3); background:rgba(16,185,129,.08); color:var(--green); border-radius:6px; cursor:pointer; font-weight:600;"
+                  title="Refresh checkout tabs">🔄 Refresh</button>
+                <button id="cc-show-all-tabs-btn"
+                  style="padding:6px 10px; font-size:10px; border:1px solid rgba(107,114,128,.3); background:rgba(107,114,128,.08); color:var(--text-muted); border-radius:6px; cursor:pointer; font-weight:600;"
+                  title="Show all open tabs (debug)">Show All</button>
+              </div>
+
+              <!-- 2. Card Replacement -->
+              <div class="section-header">
+                <div class="section-title">2. Card Replacement</div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-card-replacement-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-card-replacement-content" style="margin-bottom:16px;">
+                <div class="cc-gateway-selector-row" id="cc-card-replacement-selector">
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-stripe"
+                      data-gateway="stripe">
+                    <div class="cc-gateway-icon" style="background:#635bff;color:#fff;">S</div><span>Stripe</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-adyen"
+                      data-gateway="adyen">
+                    <div class="cc-gateway-icon" style="background:#0abf53;color:#fff;">A</div><span>Adyen</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-checkout"
+                      data-gateway="checkout">
+                    <div class="cc-gateway-icon" style="background:#ff5722;color:#fff;">C</div><span>Checkout.com</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-recurly"
+                      data-gateway="recurly">
+                    <div class="cc-gateway-icon" style="background:#0052cc;color:#fff;">R</div><span>Recurly</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-xsolla"
+                      data-gateway="xsolla">
+                    <div class="cc-gateway-icon" style="background:#f36;color:#fff;">X</div><span>Xsolla <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-woocommerce"
+                      data-gateway="woocommerce">
+                    <div class="cc-gateway-icon" style="background:#96588a;color:#fff;">W</div><span>WooCommerce <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-braintree"
+                      data-gateway="braintree">
+                    <div class="cc-gateway-icon" style="background:#1f1f6f;color:#fff;">B</div><span>Braintree <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-square"
+                      data-gateway="square">
+                    <div class="cc-gateway-icon" style="background:#000;color:#fff;">S</div><span>Square <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-paypal"
+                      data-gateway="paypal">
+                    <div class="cc-gateway-icon" style="background:#003087;color:#fff;">P</div><span>PayPal <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-card-replacement-amex"
+                      data-gateway="amex">
+                    <div class="cc-gateway-icon" style="background:#2e77bc;color:#fff;">A</div><span>AMEX SafeKey <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                </div>
+                <div style="display:flex; gap:8px; margin:8px 0;">
+                  <button class="cc-select-all-btn" data-target="cc-card-replacement-selector">Select All</button>
+                  <button class="cc-unselect-all-btn" data-target="cc-card-replacement-selector">Unselect All</button>
+                </div>
+                <p class="cc-hint">💡 Auto-uses next card from CC List when one fails. Required for <strong>Automation
+                    Mode</strong>.</p>
+                <div id="cc-card-replacement-hint" class="cc-warning cc-hidden">⚠️ Add BIN or CC List above to use Card
+                  Replacement.</div>
+              </div>
+
+              <!-- 3. CVV Bypass -->
+              <div class="section-header">
+                <div class="section-title">3. CVV Bypass</div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-cvv-bypass-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-cvv-bypass-content" style="margin-bottom:16px;">
+                <div class="cc-gateway-selector-row" id="cc-cvv-selector">
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-stripe" data-gateway="stripe">
+                    <div class="cc-gateway-icon" style="background:#635bff;color:#fff;">S</div><span>Stripe</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-adyen" data-gateway="adyen">
+                    <div class="cc-gateway-icon" style="background:#0abf53;color:#fff;">A</div><span>Adyen</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-checkout" data-gateway="checkout">
+                    <div class="cc-gateway-icon" style="background:#ff5722;color:#fff;">C</div><span>Checkout.com</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-recurly" data-gateway="recurly">
+                    <div class="cc-gateway-icon" style="background:#0052cc;color:#fff;">R</div><span>Recurly</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-xsolla" data-gateway="xsolla">
+                    <div class="cc-gateway-icon" style="background:#f36;color:#fff;">X</div><span>Xsolla <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-woocommerce" data-gateway="woocommerce">
+                    <div class="cc-gateway-icon" style="background:#96588a;color:#fff;">W</div><span>WooCommerce <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-braintree" data-gateway="braintree">
+                    <div class="cc-gateway-icon" style="background:#1f1f6f;color:#fff;">B</div><span>Braintree <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-square" data-gateway="square">
+                    <div class="cc-gateway-icon" style="background:#000;color:#fff;">S</div><span>Square <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-paypal" data-gateway="paypal">
+                    <div class="cc-gateway-icon" style="background:#003087;color:#fff;">P</div><span>PayPal <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-cvv-amex" data-gateway="amex">
+                    <div class="cc-gateway-icon" style="background:#2e77bc;color:#fff;">A</div><span>AMEX SafeKey <span class="pro-plus-badge">PRO+</span></span>
+                  </div>
+                </div>
+                <div style="display:flex; gap:8px; margin:8px 0;">
+                  <button class="cc-select-all-btn" data-target="cc-cvv-selector">Select All</button>
+                  <button class="cc-unselect-all-btn" data-target="cc-cvv-selector">Unselect All</button>
+                </div>
+                <p class="cc-hint">💡 <code>cvc_required</code> error? Disable this bypass for that gateway.</p>
+              </div>
+
+              <!-- 4. Payment User Agent Bypass -->
+              <div class="section-header">
+                <div class="section-title">4. Payment User Agent Bypass <span class="pro-plus-badge">PRO+</span></div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-payment-user-agent-bypass-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-payment-user-agent-bypass-content" style="margin-bottom:16px;">
+                <div class="cc-gateway-selector-row" id="cc-pua-selector">
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-pua-enabled" checked>
+                    <div class="cc-gateway-icon" style="background:#6366f1;color:#fff;">UA</div><span>User Agent Spoof</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-pua-referer" checked>
+                    <div class="cc-gateway-icon" style="background:#8b5cf6;color:#fff;">RF</div><span>Referer Spoof</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-pua-accept-lang" checked>
+                    <div class="cc-gateway-icon" style="background:#10b981;color:#fff;">AL</div><span>Accept-Language</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-pua-xforward" checked>
+                    <div class="cc-gateway-icon" style="background:#f59e0b;color:#fff;">XF</div><span>X-Forwarded-For</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-pua-cf-ip" checked>
+                    <div class="cc-gateway-icon" style="background:#06b6d4;color:#fff;">CF</div><span>CF-Connecting-IP</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-pua-sec-fetch" checked>
+                    <div class="cc-gateway-icon" style="background:#ec4899;color:#fff;">SF</div><span>Sec-Fetch Headers</span>
+                  </div>
+                </div>
+                <div class="cc-field-row" style="margin:10px 0;">
+                  <label style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:4px;">Fake User Agent Country</label>
+                  <select id="cc-pua-country-select" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--glass-border);background:var(--bg-light);color:var(--text);font-size:12px;">
+                    <option value="">Select country / region</option>
+                  </select>
+                </div>
+                <p class="cc-info-text">Stripe only</p>
+                <p class="cc-hint">💡 <code>ua_required</code> error? Disable this bypass. Country syncs with dashboard Country / Region.</p>
+              </div>
+
+              <!-- 5. Stripe Security Bypass -->
+              <div class="section-header">
+                <div class="section-title">5. Stripe Security Bypass</div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-stripe-security-bypass-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-stripe-security-bypass-content" style="margin-bottom:16px;">
+                <div class="cc-gateway-selector-row" id="cc-security-selector">
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-security-pasted" checked>
+                    <div class="cc-gateway-icon" style="background:#6366f1;color:#fff;">PF</div><span>Pasted
+                      Fields</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-security-timing">
+                    <div class="cc-gateway-icon" style="background:#8b5cf6;color:#fff;">TT</div><span>Time
+                      Tracking</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-security-tracking" checked>
+                    <div class="cc-gateway-icon" style="background:#06b6d4;color:#fff;">TI</div><span>Tracking
+                      IDs</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-security-zip" checked>
+                    <div class="cc-gateway-icon" style="background:#10b981;color:#fff;">ZP</div><span>Zip Code</span>
+                  </div>
+                </div>
+                <div style="display:flex; gap:8px; margin:8px 0;">
+                  <button class="cc-select-all-btn" data-target="cc-security-selector">Select All</button>
+                  <button class="cc-unselect-all-btn" data-target="cc-security-selector">Unselect All</button>
+                </div>
+                <p class="cc-info-text">Stripe only</p>
+                <p class="cc-hint">⚠️ Advanced: Makes automation harder to detect. Keep default <strong>ON</strong>
+                  recommended.</p>
+              </div>
+
+              <!-- 6. 3DS Bypass -->
+              <div class="section-header">
+                <div class="section-title">6. 3DS Bypass <span class="pro-badge">PRO</span></div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-three-ds-bypass-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-three-ds-bypass-content" style="margin-bottom:16px;">
+                <p class="cc-info-text">Stripe only</p>
+                <p class="cc-hint">⚠️ Experimental: <code>3ds_bypass_failed</code> is normal sometimes. Card will be
+                  re-added to list on 3DS fail.</p>
+              </div>
+
+              <!-- 7. Anti-Detect / Fingerprint Spoofing -->
+              <div class="section-header">
+                <div class="section-title">7. Anti-Detect <span class="pro-plus-badge">PRO+</span></div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-anti-detect-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-anti-detect-content" style="margin-bottom:16px;">
+                <div class="cc-gateway-selector-row" id="cc-anti-detect-selector">
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-webgl" checked>
+                    <div class="cc-gateway-icon" style="background:#8b5cf6;color:#fff;">GL</div><span>WebGL Spoof</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-audio" checked>
+                    <div class="cc-gateway-icon" style="background:#ec4899;color:#fff;">AU</div><span>AudioContext</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-timezone" checked>
+                    <div class="cc-gateway-icon" style="background:#f59e0b;color:#fff;">TZ</div><span>Timezone</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-locale" checked>
+                    <div class="cc-gateway-icon" style="background:#10b981;color:#fff;">LC</div><span>Locale</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-canvas" checked>
+                    <div class="cc-gateway-icon" style="background:#06b6d4;color:#fff;">CV</div><span>Canvas</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-battery" checked>
+                    <div class="cc-gateway-icon" style="background:#ef4444;color:#fff;">BT</div><span>Battery</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-memory" checked>
+                    <div class="cc-gateway-icon" style="background:#6366f1;color:#fff;">RM</div><span>Memory</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-ad-plugins" checked>
+                    <div class="cc-gateway-icon" style="background:#84cc16;color:#fff;">PL</div><span>Plugins</span>
+                  </div>
+                </div>
+                <p class="cc-hint">💡 Randomizes browser fingerprint each session to prevent gateway tracking.</p>
+              </div>
+
+              <!-- 8. Captcha Solver -->
+              <div class="section-header">
+                <div class="section-title">8. Captcha Solver <span class="pro-badge">PRO</span></div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-captcha-solver-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-captcha-solver-content" style="margin-bottom:16px;">
+                <div class="cc-gateway-selector-row" id="cc-captcha-selector">
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-captcha-recaptcha" checked>
+                    <div class="cc-gateway-icon" style="background:#4285f4;color:#fff;">G</div><span>reCaptcha</span>
+                  </div>
+                  <div class="cc-gateway-row"><input type="checkbox" id="cc-captcha-hcaptcha" checked>
+                    <div class="cc-gateway-icon" style="background:#0085f4;color:#fff;">H</div><span>hCaptcha</span>
+                  </div>
+                </div>
+                <p class="cc-hint">💡 Auto-clicks captcha checkboxes when they appear.</p>
+              </div>
+
+              <!-- 9. Auto-Clicker -->
+              <div class="section-header">
+                <div class="section-title">9. Auto-Clicker <span class="pro-badge">PRO</span></div>
+                <label class="cc-toggle">
+                  <input type="checkbox" id="cc-auto-clicker-toggle">
+                  <span class="cc-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="cc-hidden" id="cc-auto-clicker-content" style="margin-bottom:16px;">
+                <div class="cc-field-row" style="margin-bottom:10px;">
+                  <label style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:4px;">Click Interval (ms)</label>
+                  <input type="number" id="cc-auto-clicker-interval" value="500" min="100" max="5000" step="100" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--glass-border);background:var(--bg-light);color:var(--text);font-size:12px;">
+                </div>
+                <div class="cc-field-row" style="margin-bottom:10px;">
+                  <label style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:4px;">Custom CSS Selector (optional)</label>
+                  <input type="text" id="cc-auto-clicker-selector" placeholder="e.g. .pay-button" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--glass-border);background:var(--bg-light);color:var(--text);font-size:12px;">
+                </div>
+                <p class="cc-hint">💡 Automatically clicks checkout/pay buttons at set intervals.</p>
+              </div>
+
+            </div><!-- /cc-settings-area -->
+
+            <!-- Running Overlay -->
+            <div class="cc-running-overlay">
+              <div class="cc-running-title">🟢 Custom Checkout Running</div>
+              <div class="cc-running-sub">Settings are locked. Activity shown in log below.</div>
+              <button id="cc-running-stop-btn" class="cc-running-stop">⏹ Stop Now</button>
+            </div>
+
+            <!-- 7. Activity Log -->
+            <div class="section-header"
+              style="background:linear-gradient(135deg, rgba(107,114,128,.08), rgba(107,114,128,.04)); border-color:rgba(107,114,128,.25);">
+              <div class="section-title" style="color:var(--text-muted);">📋 Activity Log</div>
+              <div style="display:flex; gap:6px;">
+                <button id="cc-clear-log-btn"
+                  style="padding:4px 10px; font-size:9px; border:1px solid rgba(107,114,128,.4); background:rgba(107,114,128,.1); color:var(--text-muted); border-radius:6px; cursor:pointer; font-weight:600;">Clear</button>
+                <button id="cc-refresh-log-btn"
+                  style="padding:4px 10px; font-size:9px; border:1px solid rgba(68,172,255,.4); background:rgba(68,172,255,.1); color:var(--accent); border-radius:6px; cursor:pointer; font-weight:600;">Refresh</button>
+              </div>
+            </div>
+            <div id="cc-log-container"
+              style="margin-bottom:16px; max-height:200px; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px; font-family:var(--mono); font-size:10px;">
+              <div id="cc-log-content" style="display:flex; flex-direction:column; gap:4px;">
+                <div style="color:var(--text-muted); text-align:center; padding:20px;">Log is empty. Start checkout to see
+                  activity.</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:16px;">
+              <button id="cc-export-log-btn"
+                style="flex:1; padding:6px 10px; font-size:10px; border:1px solid rgba(107,114,128,.3); background:rgba(107,114,128,.08); color:var(--text-muted); border-radius:6px; cursor:pointer; font-weight:600;">📥
+                Export Log</button>
+              <button id="cc-auto-scroll-toggle"
+                style="flex:1; padding:6px 10px; font-size:10px; border:1px solid rgba(16,185,129,.3); background:rgba(16,185,129,.08); color:var(--green); border-radius:6px; cursor:pointer; font-weight:600;">Auto-Scroll:
+                ON</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Hits -->
+        <div class="tab-panel" id="panel-myhits">
+          <div class="myhits-header">
+            <div class="myhits-header-row">
+              <div class="myhits-header-left">
+                <h2 class="myhits-title">My Hits</h2>
+                <p class="myhits-subtitle">Approved history at a glance</p>
+              </div>
+              <div class="myhits-total-pill" id="myhitsTotalPill" title="Sum of hit amounts shown, converted to USD">
+                <h2 class="myhits-total-title">Your Total Hit</h2>
+                <span class="myhits-total-amt" id="myhitsTotalUsd">$0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="myhits-search-row">
+            <div class="search-input-wrap">
+              <input type="text" id="myhitsSearchInput" placeholder="Search by site, BIN, amount, status...">
+              <button class="myhits-search-clear" id="myhitsSearchClear" title="Clear search">&times;</button>
+            </div>
+            <div class="myhits-search-count" id="myhitsSearchCount"></div>
+          </div>
+
+          <div class="myhits-list" id="myhitsList">
+            <div class="myhits-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                <path d="M12 8v8M8 12h8" />
+              </svg>
+              <p>No hits recorded yet</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Cloud BINS -->
+        <div class="tab-panel" id="panel-mybins">
+          <div class="card">
+            <div class="section-label">My Cloud BINS <span class="binlib-count-badge" id="binLibCount">--</span></div>
+            <div class="my-bin-add-row">
+              <input type="text" id="myBinInput" class="my-bin-input" placeholder="Enter Quick BIN or BIN:CC"
+                autocomplete="off" />
+              <button type="button" id="myBinAddBtn" class="my-bin-add-btn">Add BIN</button>
+            </div>
+            <div class="my-bin-status" id="myBinStatus">Normal users can save up to 10 BINs in My Cloud BINS. Upgrade to
+              Pro / Pro Plus for more.</div>
+            <div class="my-bin-list" id="myBinList">
+              <div class="binlib-empty">Loading your BINs...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proxy Manager -->
+        <div class="tab-panel" id="panel-proxymanager">
+          <div class="card">
+            <div class="section-label">Proxy Manager</div>
+
+            <!-- Current Proxy Status -->
+            <div class="proxy-status-card"
+              style="background: rgba(68, 172, 255, 0.06); border: 1px solid rgba(68, 172, 255, 0.15); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <h3 style="margin: 0; font-size: 14px; font-weight: 600; color: #0f4e8c;">Current Proxy</h3>
+                <div id="proxyStatusIndicator"
+                  style="width: 8px; height: 8px; border-radius: 50%; background: #dc2626;"></div>
+              </div>
+              <div id="currentProxyDisplay"
+                style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #374151; word-break: break-all;">
+                No proxy set</div>
+              <div id="proxyInfoDisplay" style="font-size: 11px; color: #6b7280; margin-top: 4px;">IP: Unknown |
+                Country: Unknown | Type: Unknown</div>
+            </div>
+
+            <!-- Proxy Format Info -->
+            <div style="margin-bottom: 16px;">
+              <label
+                style="display: block; font-size: 11px; font-weight: 600; color: #8a9bb2; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Proxy
+                Format</label>
+              <div
+                style="font-size: 10px; color: #546275; background: rgba(68, 172, 255, 0.06); border: 1px solid rgba(68, 172, 255, 0.15); border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; line-height: 1.5;">
+                host:port:user:pass<br />
+                <span style="opacity: 0.6;">Example: 192.168.1.1:8080:user:password</span>
+              </div>
+            </div>
+
+            <!-- Add Proxy Section -->
+            <div style="margin-bottom: 16px;">
+              <label for="proxyInput"
+                style="display: block; font-size: 11px; font-weight: 600; color: #8a9bb2; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Add
+                Proxy</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="proxyInput" placeholder="host:port:user:pass"
+                  style="flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(15, 23, 42, 0.55); background: rgba(255, 255, 255, 0.08); color: #000000; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; box-sizing: border-box;" />
+                <button id="addProxyBtn"
+                  style="padding: 10px 16px; border: 1px solid #16a34a; background: #f0fdf4; color: #16a34a; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 12px; transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;">Add</button>
+              </div>
+              <style>
+                #proxyInput::placeholder {
+                  color: rgba(0, 0, 0, 0.45);
+                }
+
+                #addProxyBtn:disabled {
+                  opacity: 0.6;
+                  cursor: not-allowed;
+                  transform: scale(0.98);
+                }
+              </style>
+            </div>
+
+            <!-- Proxy Controls -->
+            <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+              <button id="testProxyBtn"
+                style="padding: 8px 14px; font-size: 11px; border: 1px solid #44ACFF; background: #f0f8ff; color: #44ACFF; border-radius: 6px; cursor: pointer; font-weight: 600;">Test
+                Proxy</button>
+              <button id="removeProxyBtn"
+                style="padding: 8px 14px; font-size: 11px; border: 1px solid #dc2626; background: #fee2e2; color: #b91c1c; border-radius: 6px; cursor: pointer; font-weight: 600;">Remove
+                Proxy</button>
+            </div>
+
+            <!-- Proxy Messages -->
+            <div id="proxyManagerMessage"
+              style="display: none; margin-bottom: 16px; padding: 10px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; text-align: center;">
+            </div>
+
+            <!-- Proxy Settings -->
+            <div style="margin-bottom: 16px;">
+              <label
+                style="display: block; font-size: 11px; font-weight: 600; color: #8a9bb2; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Proxy
+                Settings</label>
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <label
+                  style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #374151; cursor: pointer;">
+                  <input type="checkbox" id="proxyAutoRotate" style="width: 14px; height: 14px;">
+                  Auto Rotate
+                </label>
+                <label
+                  style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #374151; cursor: pointer;">
+                  <input type="checkbox" id="proxyEnabled" style="width: 14px; height: 14px;">
+                  Enable Proxy
+                </label>
+              </div>
+            </div>
+
+            <!-- Saved Proxies List -->
+            <div style="margin-bottom: 16px;">
+              <label
+                style="display: block; font-size: 11px; font-weight: 600; color: #8a9bb2; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Saved
+                Proxies</label>
+              <div id="savedProxiesList"
+                style="min-height: 120px; max-height: 200px; overflow-y: auto; background: rgba(255,255,255,0.06); border: 1px solid rgba(15,23,42,0.08); border-radius: 12px; padding: 10px;">
+                <div class="proxy-list-empty"
+                  style="color: #6b7280; font-size: 12px; text-align: center; padding: 20px;">No saved proxies</div>
+              </div>
+            </div>
+
+            <!-- Proxy Logs -->
+            <div>
+              <label
+                style="display: block; font-size: 11px; font-weight: 600; color: #8a9bb2; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Proxy
+                Logs</label>
+              <div id="proxyLogs"
+                style="min-height: 80px; max-height: 150px; overflow-y: auto; background: #ffffff; border: 1px solid rgba(15,23,42,0.08); border-radius: 8px; padding: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #111827;">
+                <div style="color: #6b7280;">Proxy activity will appear here...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-iplist">
+          <div class="card">
+            <div class="section-label">IP List</div>
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;">
+              <div style="font-size:12px;color:var(--text-muted);">Owner-only IP list from saved user proxies.</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button id="ipListRefreshBtn"
+                  style="padding: 8px 14px; font-size: 11px; border: 1px solid #44ACFF; background: #f0f8ff; color: #44ACFF; border-radius: 6px; cursor: pointer; font-weight: 600;">Refresh</button>
+                <button id="ipListCopyBtn"
+                  style="padding: 8px 14px; font-size: 11px; border: 1px solid #16a34a; background: #f0fdf4; color: #16a34a; border-radius: 6px; cursor: pointer; font-weight: 600;">Copy
+                  All</button>
+              </div>
+            </div>
+            <div id="ipListStatus" style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">Press refresh to
+              load IP list.</div>
+            <div class="my-bin-list" id="ipListContainer"
+              style="margin-top: 12px; min-height: 120px; max-height: 280px; overflow-y: auto; background: rgba(255,255,255,0.06); border: 1px solid rgba(15,23,42,0.08); border-radius: 12px; padding: 10px;">
+              <div class="binlib-empty">Owner-only IP list will appear here.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-ipfraud">
+          <div class="card">
+            <div class="section-label">IP Fraud Check</div>
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+              <h1 style="margin:0; font-size:16px; font-weight:800; color:#ffffff;">Fraud Risk Scan</h1>
+              <button id="ipFraudReloadBtn" title="Reload IP Fraud Score"
+                style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.15);color:#ffffff;border-radius:50px;cursor:pointer;"
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" style="width:20px;height:20px;">
+                <path
+                  d="M23 4v6a2 2 0 0 1 2H5a2 2 0 0 1 2v6a9 9 0 0 1 9h14a9 9 0 0 1 9v-2a2 2 0 0 1-2-2H7a2 2 0 0 1-2V8a2 2 0 0 1 2z" />
+                <path
+                  d="M1 4v6a2 2 0 0 1 2H5a2 2 0 0 1 2v6a9 9 0 0 1 9h14a9 9 0 0 1 9v-2a2 2 0 0 1-2-2H7a2 2 0 0 1-2V8a2 2 0 0 1 2z" />
+                <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10" />
+                <path d="M20.49 15a9 9 0 0 1-14.13 3.36L1 14" />
+                </svg>
+              </button>
+            </div>
+            <div
+              style="margin-top: 12px; padding: 10px 14px; background: rgba(255, 255, 255, 0.08); border-left: 3px solid #ffffff; border-radius: 8px; font-size: 11px; color: #e2e8f0; line-height: 1.5;">
+              <strong>Note:</strong> Fraud Risk Scan Score is calculated based on: Proxy (+30), VPN (+35), Datacenter
+              (+25), TOR (+45), Abuser (+40), Crawler (+15), Company reputation (0-40). Total capped at 100.
+            </div>
+            <div id="ipFraudResultCard"
+              style="display:none; margin-top: 16px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; padding: 16px; color: #ffffff;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px; flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div id="ipFraudIcon" class="proxy-status-icon notset"
+                    style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ffffff; display: inline-flex; align-items: center; justify-content: center;">
+                  </div>
+                  <div>
+                    <div id="ipFraudStatus" class="proxy-status-text low" style="font-weight: 700; font-size: 14px;">Not
+                      checked</div>
+                    <div id="ipFraudDetails" style="font-size: 12px; color: #e2e8f0; margin-top: 4px;">Fraud score
+                      details will appear here.</div>
+                  </div>
+                </div>
+                <div style="text-align:right; min-width: 120px;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #e2e8f0; margin-bottom: 6px;">
+                    Risk score</div>
+                  <div id="ipFraudScore" style="font-size: 24px; font-weight: 700; color: #ffffff;">--/100</div>
+                </div>
+              </div>
+              <div id="ipFraudScorebar" class="ipcheck-scorebar" style="margin-top: 14px;">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div style="margin-top: 18px; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Your IP</h2>
+                  <div id="ipFraudIp" class="blurred"
+                    style="font-weight: 700; letter-spacing: 0.02em; text-align: center;">●●●●●●●●</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    ISP</h2>
+                  <div id="ipFraudIsp" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Org</h2>
+                  <div id="ipFraudOrg" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    ASN</h2>
+                  <div id="ipFraudAsn" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Country</h2>
+                  <div id="ipFraudCountry" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Country Code</h2>
+                  <div id="ipFraudCountryCode" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Region</h2>
+                  <div id="ipFraudRegion" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    City</h2>
+                  <div id="ipFraudCity" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Latitude</h2>
+                  <div id="ipFraudLatitude" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Longitude</h2>
+                  <div id="ipFraudLongitude" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Time Zone</h2>
+                  <div id="ipFraudTimeZone" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Proxy</h2>
+                  <div id="ipFraudProxy" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Connection Type</h2>
+                  <div id="ipFraudConnectionType" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Operator Name</h2>
+                  <div id="ipFraudOperatorName" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 700;">
+                    OS Highest Class</div>
+                  <div id="ipFraudOsHighestClass" style="font-weight: 700; color: #e2e8f0;">--</div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 700;">
+                    Auth Method</div>
+                  <div id="ipFraudAuthMethod" style="font-weight: 700; color: #e2e8f0;">--</div>
+                </div>
+                <div
+                  style="background: rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px; grid-column: span 2;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; font-weight: 700;">
+                    Proxy Used</div>
+                  <div id="ipFraudProxyUsed"
+                    style="font-weight: 700; font-size: 12px; word-break: break-all; color: #e2e8f0;">--</div>
+                </div>
+              </div>
+              <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.15);">
+                <label for="ipFraudEndpointInput"
+                  style="display: block; font-size: 11px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Custom
+                  Endpoint</label>
+                <input type="text" id="ipFraudEndpointInput" placeholder="https://example.com/scan?ip={ip}"
+                  style="width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.08); color: #ffffff; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; box-sizing: border-box; margin-bottom: 10px;" />
+                <button id="ipFraudEndpointSaveBtn"
+                  style="width: 100%; padding: 10px 14px; border-radius: 10px; border: none; background: rgba(255, 255, 255, 0.18); color: #ffffff; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.18s; border: 1px solid rgba(255, 255, 255, 0.25);">
+                  Save Endpoint
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Private BIN Lookup -->
+        <div class="tab-panel" id="panel-binlookup">
+          <div class="card">
+            <div class="section-label">Private BIN Lookup System</div>
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+              <h1 style="margin:0; font-size:16px; font-weight:800; color:#0ea5e9;">Advanced BIN Checker</h1>
+              <button id="binLookupReloadBtn" title="Reload BIN Stats"
+                style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid rgba(14,165,233,0.35);background:#f0f9ff;color:#0ea5e9;border-radius:10px;cursor:pointer;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width:18px;height:18px;">
+                  <polyline points="1 4 1 10 7 10" />
+                  <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10" />
+                  <path d="M20.49 15a9 9 0 0 1-14.13 3.36L1 14" />
+                </svg>
+              </button>
+            </div>
+
+            <div id="binLookupNote"
+              style="margin-top: 12px; padding: 10px 14px; background: rgba(14, 165, 233, 0.08); border-left: 3px solid #0ea5e9; border-radius: 8px; font-size: 11px; color: #0284c7; line-height: 1.5;">
+              <strong>Note:</strong> Supports 6-10 digit Private BIN Lookup with real-time data from multiple sources
+              including binlist.net, bin-checker.net, and bincheck.io.
+            </div>
+
+            <!-- Card Type Selector -->
+            <div id="binCardTypeSection" style="margin-top: 16px;">
+              <label for="cardTypeSelector"
+                style="display: block; font-size: 11px; font-weight: 600; color: #0284c7; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Select Card Type
+              </label>
+              <div style="display:flex;gap:8px;">
+                <select id="cardTypeSelector"
+                  style="flex:1; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(15, 23, 42, 0.15); background: rgba(255, 255, 255, 0.08); color: #0ea5e9; font-family: 'Inter', sans-serif; font-size: 12px; outline: none; box-sizing: border-box; cursor: pointer;">
+                  <option value="">-- Choose Card Type --</option>
+                  <option value="visa">Visa</option>
+                  <option value="mastercard">Mastercard</option>
+                  <option value="amex">American Express</option>
+                  <option value="discover">Discover</option>
+                  <option value="jcb">JCB</option>
+                  <option value="diners">Diners Club</option>
+                  <option value="unionpay">UnionPay</option>
+                </select>
+                <button id="showCardsByTypeBtn"
+                  style="padding: 10px 16px; border-radius: 10px; border: none; background: rgba(14, 165, 233, 0.18); color: #0ea5e9; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.18s; border: 1px solid rgba(14, 165, 233, 0.25);">
+                  Show BINs
+                </button>
+              </div>
+            </div>
+
+            <!-- BIN Input Section -->
+            <div id="binInputSection" style="margin-top: 16px;">
+              <label for="binInput"
+                style="display: block; font-size: 11px; font-weight: 600; color: #0284c7; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Enter
+                BIN (6-10 digits)</label>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="binInput" placeholder="424242" maxlength="10"
+                  style="flex:1; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(15, 23, 42, 0.15); background: rgba(255, 255, 255, 0.08); color: #0ea5e9; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; box-sizing: border-box;" />
+                <button id="binLookupBtn"
+                  style="padding: 10px 16px; border-radius: 10px; border: none; background: rgba(14, 165, 233, 0.18); color: #0ea5e9; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.18s; border: 1px solid rgba(14, 165, 233, 0.25);">
+                  Lookup
+                </button>
+              </div>
+            </div>
+
+            <!-- BIN Result Display -->
+            <div id="binResultCard"
+              style="display:none; margin-top: 16px; background: rgba(240, 249, 255, 0.95); border: 1px solid rgba(14, 165, 233, 0.25); border-radius: 16px; padding: 16px; color: #0284c7;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px; flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div id="binIcon" class="proxy-status-icon notset"
+                    style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #0ea5e9; display: inline-flex; align-items: center; justify-content: center;">
+                    💳</div>
+                  <div>
+                    <div id="binStatus" class="proxy-status-text low" style="font-weight: 700; font-size: 14px;">Ready
+                      to lookup</div>
+                    <div id="binDetails" style="font-size: 12px; color: #0284c7; margin-top: 4px;">Enter a BIN to get
+                      detailed information</div>
+                  </div>
+                </div>
+                <div style="text-align:right; min-width: 120px;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #0284c7; margin-bottom: 6px;">
+                    BIN Length</div>
+                  <div id="binLength" style="font-size: 24px; font-weight: 700; color: #0ea5e9;">--</div>
+                </div>
+              </div>
+
+              <!-- BIN Information Grid -->
+              <div id="binInfoGrid"
+                style="margin-top: 18px; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Scheme</h2>
+                  <div id="binScheme" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Type</h2>
+                  <div id="binType" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Brand</h2>
+                  <div id="binBrand" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Bank</h2>
+                  <div id="binBank" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Country</h2>
+                  <div id="binCountry" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px;">
+                  <h2
+                    style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800; text-align: center;">
+                    Currency</h2>
+                  <div id="binCurrency" style="font-weight: 700; text-align: center;">--</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Card Type Results -->
+            <div id="cardTypeResults" style="display:none; margin-top: 16px;">
+              <h3
+                style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 12px; font-weight: 800;">
+                Available Cards</h3>
+              <div id="cardTypeList"
+                style="max-height: 300px; overflow-y: auto; background: rgba(240, 249, 255, 0.5); border: 1px solid rgba(14, 165, 233, 0.15); border-radius: 12px; padding: 12px;">
+                <!-- Card results will be populated here -->
+              </div>
+            </div>
+
+            <!-- Upgrade banner for normal users -->
+            <div id="binUpgradeBanner"
+              style="display:none; margin-top: 16px; padding: 12px 16px; background: rgba(14, 165, 233, 0.06); border: 1px dashed rgba(14, 165, 233, 0.35); border-radius: 12px; text-align: center; color: #0ea5e9; font-size: 12px; font-weight: 600;">
+              🔒 Upgrade to Pro to unlock full Private BIN Lookup — Card Type Filter, BIN Search, and detailed card information.
+            </div>
+
+            <!-- BIN Statistics -->
+            <div id="binStatsSection" style="margin-top: 16px;">
+              <h3
+                style="font-size: 13px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 12px; font-weight: 800;">
+                Database Statistics</h3>
+              <div style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px; text-align: center;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800;">
+                    Total BINs</div>
+                  <div id="totalBins" style="font-size: 20px; font-weight: 700; color: #0ea5e9;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px; text-align: center;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800;">
+                    Countries</div>
+                  <div id="totalCountries" style="font-size: 20px; font-weight: 700; color: #0ea5e9;">--</div>
+                </div>
+                <div style="background: #f0f9ff; border-radius: 14px; padding: 12px; text-align: center;">
+                  <div
+                    style="font-size: 11px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 6px; font-weight: 800;">
+                    Schemes</div>
+                  <div id="totalSchemes" style="font-size: 20px; font-weight: 700; color: #0ea5e9;">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="tab-panel tab-panel--stats" id="panel-statistics">
+          <div class="stats-content">
+            <div class="section-label" style="margin-bottom:10px;">Personal Stats</div>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-card-value" id="statVelocity">0</div>
+                <div class="stat-card-label">24h Velocity</div>
+              </div>
+              <div class="stat-card" id="topBinCard">
+                <div class="stat-card-value" id="statTopBin">----</div>
+                <button type="button" id="topBinActionBtn" class="top-bin-action-btn" title="View Top BIN">👁</button>
+                <div class="stat-card-label">Top BIN</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-value" id="statSaved">0m</div>
+                <div class="stat-card-label">Time Saved</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-value" id="statAccuracy">0%</div>
+                <div class="stat-card-label">Accuracy</div>
+              </div>
+            </div>
+
+            <div class="section-label" style="margin-bottom:10px;">Global Overview</div>
+            <div class="stats-grid" id="statsGrid">
+              <div class="stat-card">
+                <div class="stat-card-value" id="statUsers">--</div>
+                <div class="stat-card-label">Total Users</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-value" id="statHits">--</div>
+                <div class="stat-card-label">Total Hits</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-value" id="statToday">--</div>
+                <div class="stat-card-label">Hits Today</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-value" id="statWeek">--</div>
+                <div class="stat-card-label">Hits This Week</div>
+              </div>
+            </div>
+
+            <div class="section-label" style="margin-bottom:10px;">Top Hitters</div>
+            <div id="leaderboardList">
+              <div class="loading">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-footer" id="statsFooter" style="display:none;">
+            <div class="rank-badge rank-default" id="statsFooterRank">#--</div>
+            <div class="stats-footer-pfp-wrap" id="statsFooterPfpWrap">
+              <div class="hitter-pfp-fallback" id="statsFooterPfpFallback">U</div>
+            </div>
+            <div class="stats-footer-info">
+              <span class="stats-footer-name" id="statsFooterName">You</span>
+            </div>
+            <div class="hitter-hits" id="statsFooterHits">0</div>
+          </div>
+        </div>
+
+        <!-- Proxy -->
+        <div class="tab-panel" id="panel-proxy">
+          <div class="card proxy-status-card">
+            <div class="proxy-status-icon connected" id="proxyIcon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div class="proxy-status-text connected" id="proxyStatusText">Connected</div>
+            <div class="proxy-host" id="proxyHostDisplay"></div>
+          </div>
+
+          <div class="proxy-info-chips">
+            <div class="proxy-chip">
+              <div class="proxy-chip-label">Mode</div>
+              <div class="proxy-chip-value" id="proxyMode">--</div>
+            </div>
+            <div class="proxy-chip">
+              <div class="proxy-chip-label">Port</div>
+              <div class="proxy-chip-value" id="proxyPort">--</div>
+            </div>
+          </div>
+
+          <button class="btn-danger" id="clearProxyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            Clear Proxy
+          </button>
+        </div>
+
+        <!-- Owner Dashboard System -->
+        <div class="tab-panel" id="panel-ownerpanel">
+          <div class="card">
+            <!-- Owner Status Messages -->
+            <div id="ownerStatusMsg" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;"></div>
+
+            <!-- Inline Confirmation Dialog -->
+            <div id="ownerConfirmBox" style="display:none;margin-bottom:12px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-align:center;">
+              <div id="ownerConfirmText" style="font-size:12px;margin-bottom:10px;color:var(--text);">Are you sure?</div>
+              <div style="display:flex;gap:8px;justify-content:center;">
+                <button class="owner-btn" id="ownerConfirmYes" style="background:var(--red-soft);border-color:var(--red);color:var(--red);">Yes</button>
+                <button class="owner-btn" id="ownerConfirmNo">No</button>
+              </div>
+            </div>
+
+            <!-- Inline Prompt Dialog -->
+            <div id="ownerPromptBox" style="display:none;margin-bottom:12px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-align:center;">
+              <div id="ownerPromptText" style="font-size:12px;margin-bottom:8px;color:var(--text);">Enter value:</div>
+              <input type="text" id="ownerPromptInput" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-dark);color:var(--text);font-family:var(--mono);font-size:12px;margin-bottom:10px;" />
+              <div style="display:flex;gap:8px;justify-content:center;">
+                <button class="owner-btn" id="ownerPromptOk" style="background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green);">OK</button>
+                <button class="owner-btn" id="ownerPromptCancel">Cancel</button>
+              </div>
+            </div>
+
+            <div class="owner-panel-header">
+              <div class="owner-panel-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <div class="owner-panel-title">Owner Dashboard System</div>
+              <div class="owner-panel-subtitle">Complete system administration, user management & CC records</div>
+            </div>
+
+            <div class="owner-stats-grid">
+              <div class="owner-stat-card">
+                <div class="owner-stat-value" id="ownerStatTotalUsers">--</div>
+                <div class="owner-stat-label">Total Users</div>
+              </div>
+              <div class="owner-stat-card">
+                <div class="owner-stat-value" id="ownerStatPremiumUsers">--</div>
+                <div class="owner-stat-label">Premium Users</div>
+              </div>
+              <div class="owner-stat-card">
+                <div class="owner-stat-value" id="ownerStatCcRecords">--</div>
+                <div class="owner-stat-label">CC Records</div>
+              </div>
+            </div>
+
+            <div class="owner-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              Grant Subscription Access
+            </div>
+
+            <div class="owner-form-grid">
+              <div class="owner-form-card">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width:14px;height:14px;color:var(--accent);">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  Monthly Subscription
+                </h4>
+                <div class="owner-field">
+                  <label>Role</label>
+                  <select id="monthlyRole">
+                    <option value="pro">Pro</option>
+                    <option value="pro_plus">Pro+</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div class="owner-field">
+                  <label>Pick User</label>
+                  <select id="monthlyUserSelect">
+                    <option value="">-- Loading users... --</option>
+                  </select>
+                </div>
+                <div class="owner-field">
+                  <label>Or Enter Manually</label>
+                  <input type="text" id="monthlyUserManual" placeholder="@username or chat_id">
+                </div>
+                <div class="owner-field">
+                  <label>Duration</label>
+                  <input type="text" value="30 days" disabled style="opacity:0.7;">
+                </div>
+                <button class="owner-btn" id="grantMonthlyBtn">Grant
+                  Access</button>
+              </div>
+
+              <div class="owner-form-card">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width:14px;height:14px;color:var(--accent);">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  Custom Subscription
+                </h4>
+                <div class="owner-field">
+                  <label>Role</label>
+                  <select id="customRole">
+                    <option value="pro">Pro</option>
+                    <option value="pro_plus">Pro+</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div class="owner-field">
+                  <label>Pick User</label>
+                  <select id="customUserSelect">
+                    <option value="">-- Loading users... --</option>
+                  </select>
+                </div>
+                <div class="owner-field">
+                  <label>Or Enter Manually</label>
+                  <input type="text" id="customUserManual" placeholder="@username or chat_id">
+                </div>
+                <div class="owner-field">
+                  <label>Days</label>
+                  <input type="number" id="customDays" placeholder="2-365" min="2" max="365">
+                </div>
+                <button class="owner-btn" id="grantCustomBtn">Grant License</button>
+              </div>
+            </div>
+
+            <div class="owner-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Premium Users
+            </div>
+
+            <div class="owner-users-grid">
+              <div class="owner-user-card">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width:14px;height:14px;color:var(--accent);">
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                  Pro Users
+                </h4>
+                <div class="owner-user-list" id="proUsersList">
+                  <div class="owner-loading">Loading...</div>
+                </div>
+              </div>
+              <div class="owner-user-card">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width:14px;height:14px;color:var(--accent);">
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    <path d="M12 5.67l1.06-1.06" style="stroke-width:3" />
+                  </svg>
+                  Pro+ Users
+                </h4>
+                <div class="owner-user-list" id="proPlusUsersList">
+                  <div class="owner-loading">Loading...</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="owner-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="8" x2="16" y2="16" />
+                <line x1="8" y1="8" x2="8" y2="16" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+              </svg>
+              CC Records
+            </div>
+
+            <div class="owner-form-card" style="margin-bottom:12px;">
+              <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:12px;">
+                <div class="owner-field" style="flex:1;min-width:200px;margin-bottom:0;">
+                  <label>Download Range (e.g. 34-68)</label>
+                  <input type="text" id="ccDownloadRange" placeholder="Leave empty for ALL records">
+                </div>
+                <button class="owner-btn" id="ccDownloadBtn"
+                  style="flex:0 0 auto;padding:10px 20px;">Download .txt</button>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);">
+                Format: Card: XXXX | Month: XX | Year: XX | CVC: XXX | Email: ... | Charged: $XX.XX
+              </div>
+              <div id="ccDownloadStatus" style="margin-top:8px;font-size:11px;color:var(--accent);display:none;"></div>
+            </div>
+
+            <div class="owner-user-card">
+              <h4>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width:14px;height:14px;color:var(--accent);">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                Saved CC Records
+              </h4>
+              <div class="owner-user-list" id="ccRecordsList">
+                <div class="owner-loading">Loading...</div>
+              </div>
+            </div>
+
+            <div class="owner-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+              BINs Data Record
+            </div>
+
+            <div class="owner-form-card" style="margin-bottom:12px;">
+              <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:12px;">
+                <div class="owner-field" style="flex:1;min-width:200px;margin-bottom:0;">
+                  <label>Total BIN Records</label>
+                  <div id="binDataTotal" style="font-size:18px;font-weight:700;color:var(--accent);">--</div>
+                </div>
+                <button class="owner-btn" id="binDataDownloadBtn"
+                  style="flex:0 0 auto;padding:10px 20px;">Download TYAgrey-BINs-Data.txt</button>
+                <button class="owner-btn" id="binDataRefreshBtn"
+                  style="flex:0 0 auto;padding:10px 20px;">Refresh</button>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);">
+                Format: BIN | Merchant Site | Amount | Currency | Timestamp
+              </div>
+              <div id="binDataDownloadStatus" style="margin-top:8px;font-size:11px;color:var(--accent);display:none;"></div>
+            </div>
+
+            <div class="owner-user-card">
+              <h4>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width:14px;height:14px;color:var(--accent);">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                BIN Data Records
+              </h4>
+              <div class="owner-user-list" id="binDataList">
+                <div class="owner-loading">Loading...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Smooth loading overlay for stop/reload -->
+  <div id="cc-stop-loading-overlay" class="cc-stop-loading-overlay">
+    <div class="cc-stop-loading-spinner"></div>
+    <div class="cc-stop-loading-text">Stopping & Reloading...</div>
+  </div>
+
+  <script src="../script/country-region.js"></script>
+  <script src="../script/custom-checkout.js"></script>
+  <script>function _0x5aeb(_0x49ffdf,_0x1db007){_0x49ffdf=_0x49ffdf-0x166;var _0x90379e=_0x9037();var _0x5aeb53=_0x90379e[_0x49ffdf];if(_0x5aeb['ppYMcI']===undefined){var _0x4e1213=function(_0x2d4a5f){var _0x513c3d='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x413445='',_0x543b57='';for(var _0xc0d1c7=0x0,_0x4156e1,_0x3e8f80,_0x263ed9=0x0;_0x3e8f80=_0x2d4a5f['charAt'](_0x263ed9++);~_0x3e8f80&&(_0x4156e1=_0xc0d1c7%0x4?_0x4156e1*0x40+_0x3e8f80:_0x3e8f80,_0xc0d1c7++%0x4)?_0x413445+=String['fromCharCode'](0xff&_0x4156e1>>(-0x2*_0xc0d1c7&0x6)):0x0){_0x3e8f80=_0x513c3d['indexOf'](_0x3e8f80);}for(var _0x5dac42=0x0,_0x2d4366=_0x413445['length'];_0x5dac42<_0x2d4366;_0x5dac42++){_0x543b57+='%'+('00'+_0x413445['charCodeAt'](_0x5dac42)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x543b57);};_0x5aeb['goCwTq']=_0x4e1213,_0x5aeb['zbDdMN']={},_0x5aeb['ppYMcI']=!![];}var _0x239b8d=_0x90379e[0x0],_0x3b8332=_0x49ffdf+_0x239b8d,_0x137046=_0x5aeb['zbDdMN'][_0x3b8332];return!_0x137046?(_0x5aeb53=_0x5aeb['goCwTq'](_0x5aeb53),_0x5aeb['zbDdMN'][_0x3b8332]=_0x5aeb53):_0x5aeb53=_0x137046,_0x5aeb53;}function _0x9037(){var _0x5631c6=['mtaWmtaZtKrjz2LQ','mti2mJy3mNrmvxfqCa','mteZmdy5odjkDuPVq1y','mJqZntzewKXoEfK','C3rVCMfNzq','mJyXs1Deyxz3','B3DUzxjqyw5LBfrHyKj0BG','mtC4otzsA0LKuvO','mZuWmJG0ovLZEuLIBa','odGWmNj5CgvYsW','DhLHz3jLEv9JAgf0x2LK','z2v0rwXLBwvUDej5swq','odKZmta2nvD0s291EG','nZCXntKYmJC5mq','AxbmAxn0vgfIqNrU','DhLHz3jLEv91C2vYx2LK','y2XHC3nmAxn0'];_0x9037=function(){return _0x5631c6;};return _0x9037();}(function(_0x229eca,_0x312f2b){var _0x7f3b29=_0x5aeb,_0x50a98b=_0x229eca();while(!![]){try{var _0x2612fb=-parseInt(_0x7f3b29(0x166))/0x1+parseInt(_0x7f3b29(0x167))/0x2+parseInt(_0x7f3b29(0x16b))/0x3*(-parseInt(_0x7f3b29(0x169))/0x4)+parseInt(_0x7f3b29(0x172))/0x5+parseInt(_0x7f3b29(0x168))/0x6+-parseInt(_0x7f3b29(0x16e))/0x7+-parseInt(_0x7f3b29(0x16d))/0x8*(parseInt(_0x7f3b29(0x16f))/0x9);if(_0x2612fb===_0x312f2b)break;else _0x50a98b['push'](_0x50a98b['shift']());}catch(_0x364966){_0x50a98b['push'](_0x50a98b['shift']());}}}(_0x9037,0xf03c7),(function(){var _0x43e91a=_0x5aeb;try{typeof chrome!=='undefined'&&chrome[_0x43e91a(0x16a)]&&chrome['storage']['local']&&chrome[_0x43e91a(0x16a)]['local']['get']([_0x43e91a(0x170),'tyagrey_user_id'],function(_0x413445){var _0xed2de0=_0x43e91a,_0x543b57=_0x413445&&_0x413445[_0xed2de0(0x170)]?String(_0x413445[_0xed2de0(0x170)]):'',_0xc0d1c7=_0x413445&&_0x413445[_0xed2de0(0x175)]?String(_0x413445['tyagrey_user_id']):'';if(_0x543b57==='7715922791'||_0xc0d1c7===_0xed2de0(0x173)){var _0x4156e1=document[_0xed2de0(0x171)](_0xed2de0(0x174)),_0x3e8f80=document['getElementById'](_0xed2de0(0x16c));if(_0x4156e1)_0x4156e1[_0xed2de0(0x176)]['remove']('hidden');if(_0x3e8f80)_0x3e8f80['classList']['remove']('hidden');}});}catch(_0x263ed9){}}()));</script>
+  <script src="../script/popup.js?v=11"></script>
+</body>
+
+</html>

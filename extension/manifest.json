@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Special Robot Addon (Demo)",
+  "version": "0.1",
+  "description": "Demo extension that talks to the Special Robot addon API",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

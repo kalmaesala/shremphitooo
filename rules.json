@@ -1,0 +1,448 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "content-type",
+          "operation": "set",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||api.stripe.com/",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 100,
+    "priority": 100,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://safekey*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 101,
+    "priority": 101,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.safekey*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 102,
+    "priority": 102,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://americanexpress*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 103,
+    "priority": 103,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.americanexpress*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 104,
+    "priority": 104,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://amex*/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 105,
+    "priority": 105,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://cardinalcommerce*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 106,
+    "priority": 106,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.cardinalcommerce*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 107,
+    "priority": 107,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://3dsecure*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 108,
+    "priority": 108,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.3dsecure*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 109,
+    "priority": 109,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://acs.*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 110,
+    "priority": 110,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://mpi.*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 111,
+    "priority": 111,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://three-ds*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 112,
+    "priority": 112,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://threeds*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 113,
+    "priority": 113,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "||hooks.stripe.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 114,
+    "priority": 114,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "||hooks.stripe.com/*challenge*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 115,
+    "priority": 115,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://centinelapi*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 116,
+    "priority": 116,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.centinelapi*/*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 200,
+    "priority": 200,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "||js.stripe.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 201,
+    "priority": 201,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "||js.stripe.com/*challenge*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 202,
+    "priority": 202,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://checkout.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 203,
+    "priority": 203,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.checkout.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 204,
+    "priority": 204,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://adyen.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 205,
+    "priority": 205,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.adyen.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 206,
+    "priority": 206,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://recurly.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 207,
+    "priority": 207,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.recurly.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 208,
+    "priority": 208,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://xsolla.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 209,
+    "priority": 209,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.xsolla.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 210,
+    "priority": 210,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://braintree-api.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 211,
+    "priority": 211,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.braintree-api.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 212,
+    "priority": 212,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://braintreepayments.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 213,
+    "priority": 213,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.braintreepayments.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 214,
+    "priority": 214,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://squareup.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 215,
+    "priority": 215,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.squareup.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 216,
+    "priority": 216,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://paypal.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 217,
+    "priority": 217,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.paypal.com/*3ds*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 218,
+    "priority": 218,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://*.paypal.com/*challenge*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 300,
+    "priority": 300,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "content-security-policy", "operation": "remove" },
+        { "header": "content-security-policy-report-only", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["main_frame", "sub_frame", "script", "xmlhttprequest", "fetch"]
+    }
+  },
+  {
+    "id": 301,
+    "priority": 301,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "x-frame-options", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["sub_frame"]
+    }
+  }
+]
+
+
+

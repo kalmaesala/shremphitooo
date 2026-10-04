@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <title>Addon Demo</title>
+  <style>body{font-family:sans-serif;direction:rtl;padding:12px;width:300px}button{display:block;margin-top:8px}</style>
+</head>
+<body>
+  <h3>Addon Demo</h3>
+  <label>Telegram ID: <input id="telegramId" /></label>
+  <button id="request">طلب كود تفعيل</button>
+  <hr/>
+  <label>Code: <input id="code" /></label>
+  <button id="verify">تأكيد الكود</button>
+  <hr/>
+  <label>نتيجة الهِيت (نص):</label>
+  <textarea id="resultText" rows="4" style="width:100%"></textarea>
+  <button id="sendHit">ارسال Hit</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

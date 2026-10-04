@@ -1,0 +1,406 @@
+/* Responsive Design for Mobile - Applied across the entire application */
+
+/* Base sidebar - keep original design, just ensure minimum width */
+.sidebar {
+  min-width: 240px !important;
+}
+
+/* Ultra-wide monitors (1920px+) */
+@media (min-width: 1920px) {
+  .main-container {
+    max-width: 1800px !important;
+    margin: 0 auto !important;
+  }
+  
+  .card {
+    padding: 24px !important;
+  }
+  
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  
+  .sidebar {
+    width: 300px !important;
+    min-width: 300px !important;
+  }
+}
+
+/* Large desktop (1600px - 1919px) */
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .main-container {
+    max-width: 1500px !important;
+    margin: 0 auto !important;
+  }
+  
+  .card {
+    padding: 22px !important;
+  }
+  
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  
+  .sidebar {
+    width: 280px !important;
+    min-width: 280px !important;
+  }
+}
+
+/* Desktop (1400px - 1599px) */
+@media (min-width: 1400px) and (max-width: 1599px) {
+  .main-container {
+    max-width: 1300px !important;
+    margin: 0 auto !important;
+  }
+  
+  .card {
+    padding: 20px !important;
+  }
+  
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  
+  .sidebar {
+    width: 260px !important;
+    min-width: 260px !important;
+  }
+}
+
+/* Laptop/Desktop (1200px - 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .main-container {
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+  }
+  
+  .card {
+    padding: 18px !important;
+  }
+  
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  
+  .sidebar {
+    width: 260px !important;
+    min-width: 260px !important;
+  }
+  
+}
+
+/* Small laptop (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .main-container {
+    max-width: 95% !important;
+    margin: 0 auto !important;
+  }
+  
+  .card {
+    padding: 16px !important;
+  }
+  
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .sidebar {
+    width: 240px !important;
+    min-width: 240px !important;
+  }
+  
+}
+
+@media (max-width: 1024px) {
+  /* Tablet optimizations */
+  .sidebar {
+    width: 200px !important;
+  }
+
+  .card {
+    padding: 18px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Override inline layout for main wrapper */
+  div[style*="display: flex; width: 100vw; height: 100vh; position: relative; z-index: 1;"] {
+    flex-direction: column !important;
+  }
+
+  /* Sidebar styling for mobile */
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+  }
+
+  .sidebar .sidebar-header {
+    padding: 10px 15px !important;
+  }
+
+  .sidebar .logo-section .logo-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
+  }
+
+  .sidebar .logo-text-group .logo-text {
+    font-size: 14px !important;
+  }
+
+  /* Make tab nav horizontal scrollable on mobile */
+  .sidebar .tab-nav {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+  
+  .sidebar .tab-nav::-webkit-scrollbar {
+    height: 3px !important;
+  }
+
+  .sidebar .tab-btn {
+    flex: 0 0 auto !important;
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  .sidebar .tab-btn::before {
+    width: 100% !important;
+    height: 3px !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    transform: scaleX(0) !important;
+    transform-origin: center !important;
+    transition: transform 0.3s ease !important;
+  }
+  
+  .sidebar .tab-btn.active::before {
+    transform: scaleX(1) !important;
+  }
+
+  /* Hide sidebar footer on mobile to save space */
+  .sidebar .sidebar-footer {
+    display: none !important;
+  }
+
+  /* Header adjustments */
+  .header {
+    padding: 10px 15px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .header-left {
+    gap: 8px !important;
+  }
+  
+  .header-right {
+    gap: 6px !important;
+  }
+  
+  .version-badge {
+    display: none !important;
+  }
+
+  /* Tab content area adjustments */
+  .tab-content {
+    padding: 15px !important;
+  }
+  
+  .card {
+    padding: 15px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Dashboard specific */
+  .hit-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Main container adjustments */
+  .main-container {
+    height: auto !important;
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+  }
+
+  /* Inputs and Form Groups */
+  .form-group input, 
+  .form-group select, 
+  .form-group textarea,
+  .setting-input {
+    font-size: 14px !important;
+  }
+  
+  .modal-content {
+    width: 95% !important;
+    margin: 10px auto !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Smaller screens */
+  .top-stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .header-user-area .user-name {
+    display: none !important; /* Hide username on very small screens, keep avatar */
+  }
+
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .btn, .action-btn {
+    padding: 10px 15px !important;
+  }
+
+  /* Select All / Deselect All buttons - make touch-friendly on mobile */
+  .cc-select-all-btn,
+  .cc-unselect-all-btn {
+    padding: 12px 16px !important;
+    font-size: 12px !important;
+    min-height: 44px !important; /* iOS touch target minimum */
+    min-width: 80px !important;
+    border-radius: 8px !important;
+    -webkit-tap-highlight-color: rgba(125, 211, 252, 0.3) !important;
+  }
+
+  .cc-select-all-btn:active,
+  .cc-unselect-all-btn:active {
+    background: rgba(125, 211, 252, .25) !important;
+    transform: scale(0.98) !important;
+  }
+
+  /* Gateway row touch targets */
+  .cc-gateway-row {
+    min-height: 44px !important; /* iOS touch target minimum */
+    padding: 12px !important;
+  }
+
+  /* Toggle switches - make touch-friendly */
+  .cc-toggle {
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+  }
+
+  .cc-toggle input[type="checkbox"] {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+  }
+
+  /* Mode buttons */
+  .cc-mode-btn {
+    padding: 12px 16px !important;
+    min-height: 44px !important;
+    font-size: 12px !important;
+  }
+
+  /* Start button */
+  .cc-start-btn {
+    padding: 14px 20px !important;
+    min-height: 50px !important;
+    font-size: 14px !important;
+  }
+
+  /* All buttons touch-friendly */
+  button,
+  .btn,
+  .action-btn,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px !important;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Input fields touch-friendly */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  textarea,
+  select {
+    min-height: 44px !important;
+    padding: 12px !important;
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+  }
+
+  /* Manual input fields specific */
+  #monthlyUserManual,
+  #customUserManual {
+    min-height: 44px !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+  }
+
+  /* Tables - make scrollable on mobile */
+  table {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Scrollable areas */
+  .cc-gateway-selector-row {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 8px !important;
+  }
+
+  /* Custom checkout section headers */
+  .section-header {
+    padding: 12px !important;
+  }
+
+  /* CC list input area */
+  #cc-list-input {
+    min-height: 100px !important;
+    padding: 12px !important;
+    font-size: 14px !important;
+  }
+
+  /* BIN input */
+  #cc-bin-input {
+    min-height: 44px !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+  }
+
+  /* Copy buttons */
+  .copy-btn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  /* Status badges */
+  .badge,
+  .status-badge {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+}

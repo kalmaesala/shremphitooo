@@ -1,0 +1,76 @@
+.tya-overlay{position:fixed;z-index:999999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#fff;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.tya-overlay.pos-br{bottom:20px;right:20px}
+.tya-overlay.pos-bl{bottom:20px;left:20px}
+.tya-overlay.pos-tr{top:20px;right:20px}
+.tya-overlay.pos-tl{top:20px;left:20px}
+.tya-overlay *{box-sizing:border-box;margin:0}
+.tya-overlay.state-full .tya-pill{display:none}
+.tya-overlay.state-full .tya-full{display:block}
+.tya-overlay.state-pill .tya-pill{display:flex}
+.tya-overlay.state-pill .tya-full{display:none}
+.tya-overlay.state-dock .tya-pill{display:none}
+.tya-overlay.state-dock .tya-full{display:none}
+.tya-overlay.state-dock .tya-dock{display:flex}
+.tya-pill{display:none;background:#0f172a;border:1px solid rgba(255,255,255,.1);border-radius:40px;padding:6px 14px 6px 6px;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.4);cursor:pointer;pointer-events:auto;animation:tyaSlideIn .4s ease}
+.tya-pill-logo{width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff}
+.tya-pill-text{font-size:12px;font-weight:600;color:#fff;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tya-full{display:none;background:#0f172a;border:1px solid rgba(255,255,255,.08);border-radius:16px;width:288px;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden;pointer-events:auto;animation:tyaSlideIn .4s ease}
+.tya-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.tya-brand{display:flex;align-items:center;gap:8px}
+.tya-brand-logo{width:26px;height:26px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff}
+.tya-brand-text{display:flex;align-items:baseline;gap:4px}
+.tya-brand-name{font-weight:800;font-size:14px;background:linear-gradient(90deg,#818cf8,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tya-brand-tag{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.tya-header-right{display:flex;align-items:center;gap:4px}
+.tya-header-btn{background:transparent;border:none;color:#64748b;font-size:11px;cursor:pointer;padding:4px 6px;border-radius:4px;transition:all .2s;display:flex;align-items:center;gap:3px}
+.tya-header-btn:hover{color:#fff}
+.tya-body{padding:12px 14px}
+.tya-section-title{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.tya-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.tya-save-btn{background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3);border-radius:6px;color:#60a5fa;font-size:13px;cursor:pointer;padding:3px 8px;transition:all .2s;line-height:1}
+.tya-save-btn:hover{background:rgba(96,165,250,.25);border-color:rgba(96,165,250,.5);transform:scale(1.1)}
+.tya-save-btn:active{transform:scale(.95)}
+.tya-mode-toggle{display:flex;background:#1e293b;border-radius:10px;padding:3px;margin-bottom:12px}
+.tya-mode-btn{flex:1;padding:7px 0;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:#94a3b8}
+.tya-mode-btn.active{background:linear-gradient(90deg,#60a5fa,#3b82f6);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+.tya-bin-section{margin-bottom:12px}
+.tya-bin-input{width:100%;padding:8px 10px;background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#e2e8f0;font-size:13px;font-family:'Courier New',monospace;outline:none;transition:border-color .2s}
+.tya-bin-input:focus{border-color:rgba(99,102,241,.5)}
+.tya-cc-section{margin-bottom:12px}
+.tya-cc-textarea{width:100%;padding:8px 10px;background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#e2e8f0;font-size:12px;font-family:'Courier New',monospace;outline:none;transition:border-color .2s;resize:none;line-height:1.5}
+.tya-cc-textarea:focus{border-color:rgba(99,102,241,.5)}
+.tya-cc-textarea::placeholder{color:#475569}
+.tya-status-row{display:flex;align-items:center;gap:8px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.15);padding:10px 12px;border-radius:10px;margin-bottom:12px}
+.tya-status-icon{color:#10b981;font-size:16px}
+.tya-status-text{font-weight:700;font-size:13px;color:#10b981;flex:1}
+.tya-status-row.hit-live{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.15)}
+.tya-status-row.hit-live .tya-status-icon{color:#fbbf24}
+.tya-status-row.hit-live .tya-status-text{color:#fbbf24}
+.tya-stats{display:flex;justify-content:space-between;background:#1e293b;border-radius:10px;padding:10px 8px;margin-bottom:12px}
+.tya-stat{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+.tya-stat-label{font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+.tya-stat-value{font-size:15px;font-weight:800}
+.tya-stat-value.total{color:#e2e8f0}
+.tya-stat-value.charged{color:#10b981}
+.tya-stat-value.live{color:#fbbf24}
+.tya-stat-value.dead{color:#ef4444}
+.tya-stat-div{width:1px;background:rgba(255,255,255,.06);margin:0 4px}
+.tya-details{background:#1e293b;border-radius:10px;padding:10px 12px;font-size:11px;color:#94a3b8;margin-bottom:12px}
+.tya-detail-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.tya-detail-row:last-child{margin-bottom:0}
+.tya-detail-val{color:#e2e8f0;font-family:'Courier New',monospace;font-size:11px}
+.tya-controls{display:flex;gap:6px}
+.tya-ctrl{flex:1;padding:10px;border:none;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;transition:all .15s}
+.tya-ctrl:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.tya-ctrl:active{transform:translateY(0)}
+.tya-ctrl.start{background:linear-gradient(90deg,#3b82f6,#2563eb);box-shadow:0 4px 12px rgba(59,130,246,.3)}
+.tya-ctrl.stop{width:40px;flex:none;background:#ef4444}
+.tya-ctrl.lock{width:40px;flex:none;background:#1e293b;border:1px solid rgba(255,255,255,.1)}
+.tya-blur .tya-bin-input,.tya-blur .tya-detail-val{filter:blur(4px)}
+@keyframes tyaSlideIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.tya-dock{display:none;position:fixed;right:0;top:50%;transform:translateY(-50%);background:#0f172a;border:1px solid rgba(255,255,255,.1);border-right:none;border-radius:10px 0 0 10px;padding:12px 8px;flex-direction:column;align-items:center;gap:8px;cursor:pointer;box-shadow:-4px 0 16px rgba(0,0,0,.3);pointer-events:auto;animation:tyaSlideInRight .3s ease}
+.tya-dock-logo{width:28px;height:28px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff}
+.tya-dock-dot{width:8px;height:8px;border-radius:50%;background:#10b981;animation:tyaPulse 1.5s infinite}
+.tya-dock-text{writing-mode:vertical-rl;font-size:10px;font-weight:600;color:#64748b}
+@keyframes tyaSlideInRight{from{opacity:0;transform:translateX(20px) translateY(-50%)}to{opacity:1;transform:translateX(0) translateY(-50%)}}
+@keyframes tyaPulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}

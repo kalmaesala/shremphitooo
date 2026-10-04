@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <title>لوحة إدارة الإضافة</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>body{font-family:sans-serif;direction:rtl;padding:20px}button{padding:8px 12px;margin-top:8px}</style>
+</head>
+<body>
+  <h2>لوحة إدارة الإضافة</h2>
+
+  <section>
+    <h3>إنشاء كود تفعيل</h3>
+    <label>Telegram ID (اختياري): <input id="tg" /></label><br/>
+    <label>صلاحية بالساعة: <input id="hours" value="24" type="number" /></label><br/>
+    <button id="create">إنشاء كود</button>
+    <pre id="createResult"></pre>
+  </section>
+
+  <section>
+    <h3>قائمة الأكواد</h3>
+    <button id="load">تحميل الأكواد</button>
+    <pre id="codes"></pre>
+  </section>
+
+  <script>
+    async function jsonFetch(url,opt){
+      const res = await fetch(url,opt);
+      return res.json();
+    }
+    document.getElementById("create").addEventListener("click", async ()=>{
+      const telegram_id = document.getElementById("tg").value || undefined;
+      const expiresHours = Number(document.getElementById("hours").value) || 24;
+      const r = await jsonFetch("/api/addon/admin/create-code", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ telegram_id, expiresHours }),
+      });
+      document.getElementById("createResult").textContent = JSON.stringify(r, null, 2);
+    });
+    document.getElementById("load").addEventListener("click", async ()=>{
+      const r = await jsonFetch("/api/addon/admin/codes");
+      document.getElementById("codes").textContent = JSON.stringify(r, null, 2);
+    });
+  </script>
+</body>
+</html>

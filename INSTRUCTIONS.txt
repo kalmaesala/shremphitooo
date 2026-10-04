@@ -1,0 +1,12 @@
+(diff) Register special-robot-main addon routes from server/index.ts
+
+This change only exists on the special-robot-addon branch and does not touch main branch.
+
+To enable addon routes, add the following import+call in server/index.ts (already applied in this branch):
+
+import { registerAddonRoutes } from "../special-robot-main/server/addonRoutes";
+...
+await registerRoutes(httpServer, app);
+// register addon routes (special-robot-main)
+registerAddonRoutes(app);
+
